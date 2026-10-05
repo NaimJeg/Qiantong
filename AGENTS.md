@@ -30,13 +30,14 @@
 
 ### 1.1 UE5 的定位
 
-UE5 只承担：
+UE5 承担：
 
 - 交互与表现验证；
 - 竖屏 2D/2.5D 战场快速搭建；
 - 弹道、命中反馈、编队与竖井空间读感实验；
 - Battle Lab 调试工具；
 - 本机可玩的垂直切片。
+- 成熟引擎系统的架构研究，以及隔离在引擎中立契约之后的参考实现/原型加速器。
 
 UE5 **不承担**：
 
@@ -80,7 +81,10 @@ UE View / UI / FX     # Actor/Component/UMG/Niagara，只消费状态
 ```text
 QiantongUE -> QiantongCore
 Tools/TestHost -> QiantongCore
+QiantongUE/ReferenceBackends -> QiantongCore 中的引擎中立 Contract
 ```
+
+Application/Bridge 负责组合 Portable implementation 或 UE Reference Backend。Contract 的 DTO、稳定 ID 与行为规范归项目所有；Core 不反向 include 或链接 UE 后端。后端替换及验收见第 6.1 节。
 
 禁止：
 
@@ -95,7 +99,7 @@ View -> 修改 Core 内部对象
 
 ## 3. QiantongCore 红线
 
-`QiantongCore` 中**不得出现**以下依赖或概念：
+`QiantongCore` 中**不得出现**以下 UE 依赖或实现；允许独立定义引擎中立的 State/Condition/Effect/TagSet 等模型：
 
 - `UObject` / `AActor` / `UActorComponent`；
 - `FVector` / `FTransform` / `FName` / `FString` / `TArray` / `TMap`；
@@ -121,7 +125,7 @@ Core 优先使用：
 - 明确量纲的整数或受控数值类型；
 - 项目自有确定性 PRNG。
 
-若某功能“只有用 UE 高阶功能才容易实现”，先在 Core 定义**语义契约**，UE 只实现表现适配。
+若某功能借助 UE 高阶系统更容易验证，先定义**引擎中立语义契约**，UE 可实现表现适配或隔离的 Reference Backend，再独立实现项目所需的可移植子集。
 
 ---
 
@@ -183,7 +187,7 @@ logicalDistance + lane/formation semantic
 UE world/screen coordinates
 ```
 
-不得因为 UE 是 3D 引擎，就在 P0/P1 引入真正的 RTS NavMesh 或完整二维物理世界。
+P0/P1 的规则空间仍为射程轴与 lane/formation。可以在隔离实验中研究 NavMesh/物理查询，但其输出必须转换为上述空间契约；不得因工具选择擅自引入 RTS 寻路或完整二维物理玩法。
 
 ### 5.2 单位不拥有独立规则 Tick
 
@@ -204,9 +208,11 @@ BattleSimulation::Step()
 
 Actor/Component 是 ViewProxy，不是规则实体。
 
+上述流程描述 Portable 基准路径。第 6.1 节的参考后端可在 Host 调度下替换某个契约的实现，统一返回中立结果；不能让单位 Actor 独立推进或同时由两个后端结算。
+
 ### 5.3 弹道是“双层语义”
 
-Core 决定：
+规则契约决定以下事实（Portable 路径由 Core 实现，参考路径遵循第 6.1 节）：
 
 - 射手；
 - 目标；
@@ -232,7 +238,7 @@ Selector / FirstMatch
 idle / approach / engage / reposition / flee / dead
 ```
 
-AI 配置数据驱动。UE Behavior Tree / StateTree 可以以后用于**调试比较**，不得成为生产规则真相源。
+AI 配置数据驱动。P0/P1 即可通过 BT/StateTree/EQS Reference Backend 探索与验证同一 AI Contract；Portable evaluator 是无 UE 验收路径。UE 节点/资产不成为规则、配置或存档真相源。
 
 ---
 
@@ -245,6 +251,7 @@ AI 配置数据驱动。UE Behavior Tree / StateTree 可以以后用于**调试�
 - Niagara；
 - Paper2D / Sprite / Quad / Mesh；
 - Material；
+- Animation Blueprint / Sequencer / Camera（仅表现，不以动画回调结算规则）；
 - Actor/Component；
 - UE JSON / 文件 IO；
 - Editor Utility（仅开发工具）。
@@ -255,9 +262,40 @@ AI 配置数据驱动。UE Behavior Tree / StateTree 可以以后用于**调试�
 2. 删除 UI，Headless/Core Harness 仍可跑；
 3. 把 Actor 表现换成 DebugShape，不改变胜负/伤害/AI；
 4. 保存数据可表示为 plain JSON-like DTO，而不是 UObject graph；
-5. Blueprint 只做场景拼装/表现，不写业务规则。
+5. 正式业务规则由引擎中立 Contract 定义；Blueprint 可做场景拼装、表现及隔离的参考后端实验，不作为唯一规则定义或可移植实现。
 
-未经 `docs/DECISIONS.md` 拍板，P0/P1 禁用：GAS、BT/StateTree 生产化、EQS、NavMesh、Chaos 伤害、MassEntity、Lumen/Nanite 依赖型玩法。
+P0/P1 允许 GAS、BT/StateTree、EQS、NavMesh、MassEntity、Chaos 等作为参考后端或研究对象；不得让这些系统定义不可替代的 Gameplay Semantic。Lumen/Nanite 可用于原型显示与资产便利，不作为玩法条件或移动端内容预算依据。满足本章的后端实验无需再次申请“解除系统禁令”；新增或冲突的玩法语义仍按 ledger/DECISIONS 流程处理。
+
+### 6.1 UE Reference System / Portable Reimplementation Policy
+
+**可以使用 UE 高级功能；禁止依赖 UE 专属语义。可以研究 UE 源码；提炼设计思想并独立重实现，不复制 Engine Code 到 Portable/Cocos 实现。**
+
+```text
+Engine-neutral Contract（输入、输出、状态、时间、数值、顺序）
+  ├─ Portable implementation：纯 C++，随后独立实现 TypeScript 版本
+  └─ UE Reference Backend：GAS / StateTree / EQS 等，经 Adapter 转换
+Application/Bridge 选择后端；View 消费统一 Snapshot/Event
+```
+
+- 按实际需要为目标选择、AI、技能等系统建立契约，不预建通用引擎框架，也不要求每个系统都有两个后端。采用 UE 参考实现的系统必须补齐同契约的 Portable 实现与对照证据后，才可标记该规则卡完成。
+- 允许先运行 UE 参考实验来确定所需能力；Portable 尚未补齐时，标为探索中，不计入规则闭环或 P1/P1.5 通过。参考结果是对照样本，不是自动正确的 Oracle；差异按契约判定，设计分叉回到 ledger，不能直接覆写 Golden。
+- 每次实验只有一个选定后端提交权威结果；另一个只能在相同初态的隔离副本上对照。Host 按固定 sim tick 驱动，UE 内部回调不得绕过契约写 Core；DTO 边界检查 ID、范围及结果合法性，禁止双重结算。影响后续决策的状态须可表达为 plain DTO，不能藏在 UE 对象中。
+- `FGameplayAbilitySpecHandle`、`FGameplayEffectSpec`、`FGameplayTagContainer`、UStateTree 节点、UObject 指针等只能留在 UE Adapter/Reference Backend；不得传播到 Core、规范配置、存档或 UI 业务 ViewModel。项目 TagSet 使用稳定 string/ID，自有模型不依赖 Gameplay Tags。
+- 后端使用相同 fixture、seed、命令序列、固定步长、排序和数值规则。无法满足确定性/隔离要求的 UE 功能只能用于非权威实验，不进入可替换规则路径。
+
+每次引入前，在对应任务记录“复刻预算”：要验证的项目问题、最小能力子集、Cocos 现有等价能力、适配或独立实现的成本、明确不迁移的功能，以及可复现场景和退出条件。主要服务 UE 编辑器或 AAA 渲染的能力不迁移；Mass/SoA 等存储优化需实际规模或性能证据，不以全量复刻 UE 为目标。
+
+| UE 系统 | 可提炼的项目子集或替换方式（按需选择） |
+|---|---|
+| StateTree / BT | State、Condition、Transition、Task、Priority、Enter/Tick/Exit |
+| GAS / Gameplay Tags | Ability/Effect evaluator、Cost、Cooldown、自有 TagSet |
+| EQS | Candidates → Filter → Score → Select；同分排序明确 |
+| MassEntity | 简化批处理或 SoA 存储，不强制引入完整 ECS |
+| Niagara / UMG / Enhanced Input | FxRequest / ViewModel / GameCommand；替换表现与输入 Adapter |
+| NavMesh / Chaos | lane/grid/graph 或最小碰撞、sweep、击退数学；视觉碰撞不决定伤害 |
+| Lumen / Nanite | 无需对应实现，不迁移 AAA 渲染系统 |
+
+源码研究流程为“阅读 → 用项目语言描述问题与契约 → 独立实现 → 场景对照”。研究记录注明来源、版本与采用的思想；禁止将 UE Engine Code 复制或逐行翻译到 Portable/Cocos 代码。Epic 官方 FAQ 明确区分学习知识后独立编写与复制引擎代码；本项目据此采用上述源码纪律。[Epic 官方源码 FAQ](https://www.unrealengine.com/ue-on-github/)（核验：2026-10-05）
 
 ---
 
@@ -284,7 +322,7 @@ Data/
 - UE 资源名成为 gameplay stable ID；
 - View 自动反向生成设计数值。
 
-UE 可建立 `ContentId -> SoftObjectPath` 的**纯视觉映射表**。
+UE 可建立 `ContentId -> SoftObjectPath` 的视觉映射表，以及 Reference Backend 的可重建运行时映射/缓存。后者从中立配置转换，不成为第二份可写玩法真相源。
 
 ---
 
@@ -349,6 +387,14 @@ eventHash
 
 表现任务不能只报“编译通过”，必须提供运行截图/录屏/可复现实验入口。
 
+### G6 — Reference Backend Portability（采用 UE 规则参考后端时）
+
+- 记录 Contract 版本、后端/引擎版本、fixture、seed、命令序列与复现入口。
+- UE Reference 与 Portable C++ 对照逐 tick 的目标、状态转换、技能合法性、资源、伤害及事件顺序，并比较 G3 全部适用字段；不能只比较赢家。中立化时只剔除预先声明的表现字段，不隐去规则差异。
+- 对非法目标、同分候选、死亡/取消、成本不足、冷却边界等适用边界补测试；数值差异必须在契约中预先说明，不能用宽松误差掩盖行为漂移。
+- 关闭 UE Reference Backend 后，Portable harness 独立通过同一场景；Core、配置、存档和 UI 业务模型无 UE 类型外泄。
+- 对照通过仅证明已测子集。P1.5 仍须代表性 Portable C++/TypeScript Golden 对齐；UE 参考后端的通过不能替代 TS 迁移门。
+
 ---
 
 ## 10. 文档与 commit 纪律
@@ -396,10 +442,10 @@ Codex 不得用“implemented”“done”描述未验收工作。
 
 出现以下做法时应停止并重构，而不是继续堆功能：
 
-- “先在 Blueprint 写，迁移时再说”；
+- “只在 Blueprint 定义业务规则，不提取 Contract 或 Portable 对照”；
 - “先让 Actor 自己打，之后再抽 Core”；
 - “直接用 Projectile Collision 决定伤害”；
-- “先用 Behavior Tree，Cocos 再重写”；
+- “用 Behavior Tree/GAS 作为唯一规则定义，没有中立契约、复刻预算和对照场景”；
 - “DataAsset 先当数据库”；
 - “SaveGame 先随便序列化 UObject”；
 - “每个单位 Tick 反正现在单位不多”；
@@ -407,4 +453,4 @@ Codex 不得用“implemented”“done”描述未验收工作。
 - “设计还没定，先写个 placeholder 行为”；
 - “只要 UE 里跑起来就算 P1 完成”。
 
-这些路线都会把 UE 从“薄宿主”变成“隐性游戏规则”。
+这些路线会使 UE 变成隐性规则真相源。遵循第 6.1 节的参考后端探索与独立重实现不属于上述捷径。

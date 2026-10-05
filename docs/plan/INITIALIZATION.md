@@ -10,8 +10,8 @@
 第一次执行只做 P0 基础设施。不要：
 
 - 先画完整 HUD；
-- 先做 Niagara 炫技；
-- 先建 Behavior Tree；
+- 用大规模特效制作替代规则验收；
+- 绕过中立契约，把 Behavior Tree 等 UE 资产作为唯一规则定义；
 - 先搬上游 Cocos 代码；
 - 先批量创建 DataAssets；
 - 先做母舰经营；
@@ -92,14 +92,9 @@ DebugUnitView
 
 表现使用基础 shape/text 即可。
 
-不要在第一批引入：
+P0/P1 可使用 Niagara、UMG、Animation Blueprint、Sequencer 等表现能力，也可按 `AGENTS.md` 第 6.1 节接入 GAS、BT/StateTree、EQS、Navigation、Chaos、Mass 等参考后端。按当前闭环需求引入依赖，不预装无关系统。
 
-- Niagara；
-- GAS；
-- AI module；
-- Navigation；
-- Physics gameplay；
-- 大型插件。
+采用规则参考后端时，先写中立 Contract、最小能力/复刻预算与对照 fixture，再在 `QiantongUE/ReferenceBackends/` 隔离实现。允许先做 UE 探索；Portable 实现及 G6 未通过时不得标记相应规则卡完成。Core 不引入 UE 头、类型或链接依赖；视觉碰撞和动画回调不结算伤害。
 
 ---
 
@@ -118,6 +113,7 @@ Codex 实现 `Tools/CoreBoundary` 时至少检查：
 2. 禁止 UE 反射宏：`UCLASS/USTRUCT/UENUM/UFUNCTION/UPROPERTY/GENERATED_BODY`。
 3. 禁止典型 UE 容器/类型前缀清单（保守白名单/黑名单，避免仅靠字符串误报）。
 4. 脚本必须支持 CI exit code。
+5. 引入参考后端后，检查其 UE 类型/句柄不外泄到中立 Contract、规范配置、存档或 UI 业务 ViewModel；不是禁止 UE Adapter 内出现 UE 类型。
 
 必须做一正一反两个自测：
 
@@ -196,7 +192,7 @@ SimEvent -> debug log/temporary glyph
 - Core boundary 真能拦 UE 依赖；
 - deterministic RNG 测试锁定；
 - 最小 battle 可 headless 收束；
-- UE 仅作为 host 驱动同一 battle；
+- UE Host 驱动同一 battle Contract；如采用参考后端，Portable 路径仍能独立运行，且对应 G6 对照通过；
 - 可以删除全部 Debug View 后继续模拟；
 - `ARCHITECTURE.md` 已更新为**真实**目录；
 - 无未说明的新第三方依赖。
@@ -207,4 +203,4 @@ SimEvent -> debug log/temporary glyph
 
 可直接使用：
 
-> 阅读根 `AGENTS.md`、`docs/REQUIREMENTS.md`、`docs/spec/PROTOTYPE_LEDGER.md`、`docs/ARCHITECTURE.md`、`docs/TASK_BOARD.md` 与本文件。先侦察仓库与 UE 版本，不假定工程为空。只执行 P0：优先建立 Portable Core 边界门、确定性 RNG/SimClock、最小 BattleState/Step/Golden fixture，再建立 UE fixed-step Bridge 与 Debug View。禁止在 P0 引入 GAS、Behavior Tree/StateTree、EQS、NavMesh、Chaos gameplay、Niagara gameplay dependency、DataAsset gameplay truth 或 Actor-owned combat logic。每张卡先造失败测试/反证，完成后跑门并把证据写回 TASK_BOARD；结构变化同 commit 更新 ARCHITECTURE。若运行环境无法启动 UE Editor，如实停在静态/编译可验证层，不把整卡标 Done。
+> 阅读根 `AGENTS.md`、`docs/REQUIREMENTS.md`、`docs/spec/PROTOTYPE_LEDGER.md`、`docs/ARCHITECTURE.md`、`docs/TASK_BOARD.md` 与本文件。先侦察仓库与 UE 版本，不假定工程为空。只执行 P0：优先建立 Portable Core 边界门、确定性 RNG/SimClock、最小 BattleState/Step/Golden fixture，再建立 UE fixed-step Bridge 与 Debug View。允许按 AGENTS 6.1 使用高级表现系统或隔离的 UE Reference Backend；采用后者须提取中立契约、记录复刻预算并通过 G6。禁止 UE 类型/资产成为规范规则、配置、存档或 UI 业务模型，禁止 Actor 自主结算与视觉碰撞决定伤害。每张规则卡先造失败测试/反证，完成后跑门并把证据写回 TASK_BOARD；结构变化同 commit 更新 ARCHITECTURE。若运行环境无法启动 UE Editor，如实停在静态/编译可验证层，不把整卡标 Done。

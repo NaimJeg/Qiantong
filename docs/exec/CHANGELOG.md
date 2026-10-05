@@ -1,5 +1,13 @@
 # 执行记录
 
+## 2026-10-05 — [DOC-01][ARC-012][ARC-013][TEST-004] UE 参考后端政策
+
+- 根据用户明确修订，将 P0/P1 对 GAS、BT/StateTree、EQS、NavMesh、Mass、Chaos 等的笼统禁令改为中立接口隔离；保留纯 C++ Core、固定步长、项目随机数、单一权威状态和视觉碰撞不结算伤害等约束。
+- AGENTS 新增第 6.1 节与 G6：允许 UE 实验先行、按需双后端；规则卡完成需 Portable 实现和逐 tick/Golden 对照，P1.5 的 C++/TS 门仍必需。参考结果不自动成为正确答案。
+- 同步 REQUIREMENTS、ARCHITECTURE、PROTOTYPE_LEDGER、INITIALIZATION、P0-P1、TASK_BOARD 与 DECISIONS；取消 Niagara 的 P2 工具准入限制，保留 P1.5 → P2 的阶段顺序。未更改 BAL-003 等待决玩法。
+- 加入复刻预算、按需能力映射与源码研究纪律。核验 Epic 官方源码 FAQ，并在 AGENTS 链接来源；要求独立实现项目子集，禁止复制/逐行翻译 UE Engine Code 到 Portable/Cocos。
+- 文档验收：检索旧禁令及阶段工具限制，核对政策引用、Markdown 围栏、相对文档路径和 diff 空白检查；全部通过。只修改 AGENTS/docs，未启用插件、修改源码或配置，未运行 UE 构建或游戏测试。G0 模板依赖基线红项仍在，G6 尚未实现/执行。
+
 ## 2026-10-05 — [P0-00][ARC-011] UE 工程与 Git 基线
 
 - 首次检查 `git status --short` 返回“not a git repository”；已有工程与地图均在位，不重新生成工程。

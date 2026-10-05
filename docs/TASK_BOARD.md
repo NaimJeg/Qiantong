@@ -4,6 +4,14 @@
 > 状态：`TODO / DOING / BLOCKED / DONE`。
 > “DONE”必须附验收证据，不接受“代码已写”作为唯一证据。
 
+## 文档契约修订
+
+| ID | 状态 | 任务 | 完成定义/证据 |
+|---|---|---|---|
+| DOC-01 | DONE | 以语义隔离替代 UE 高级系统笼统禁令 | AGENTS 6.1/G6、ARC-012/013、TEST-004 及需求/架构/计划同步；旧禁令检索与 diff 检查通过；详见 CHANGELOG。本卡仅文档验收，不代表后端实现或运行门通过。 |
+
+规则卡统一附加条件：若采用 UE Reference Backend，按 `AGENTS.md` G6 补齐 Portable 实现与双后端对照后才能 DONE；实验先行阶段记 DOING。未采用者不要求双后端；P1.5 的 Portable C++/TS 对照不豁免。
+
 ## P0 — Portable Core / 工程初始化
 
 | ID | 状态 | 任务 | 完成定义/证据 |
@@ -43,7 +51,7 @@
 
 ## P2 — Ballistic Readability（暂不展开）
 
-P1.5 通过后才开始正式 Niagara/Sprite 弹道实验。目标是验证 Build 差异的视觉可读性，不是堆 FX。
+P1.5 通过后进入系统性的弹道读感验证。P0/P1 已可使用 Niagara/Sprite 等表现工具；阶段门限制的是扩展 P2 工作，不是工具使用。目标是验证 Build 差异的视觉可读性。
 
 ## 卡片执行模板
 
@@ -51,6 +59,7 @@ P1.5 通过后才开始正式 Niagara/Sprite 弹道实验。目标是验证 Buil
 
 ```text
 [ ] 对应 ledger 条目已定
+[ ] 若引入参考后端，已记录中立契约、复刻预算与对照场景
 [ ] git status 已检查
 [ ] 知道会改哪些文件
 [ ] 先写失败测试/反证
@@ -61,6 +70,7 @@ P1.5 通过后才开始正式 Niagara/Sprite 弹道实验。目标是验证 Buil
 ```text
 [ ] 自动测试通过
 [ ] Core Boundary 通过
+[ ] 若采用 UE 规则参考后端，G6 对照与关闭后端的 Portable 路径通过
 [ ] UE build（若环境可用）通过
 [ ] 表现任务有运行证据
 [ ] TASK_BOARD 写证据

@@ -1,7 +1,7 @@
 # ARCHITECTURE — UE5 Prototype
 
 > 📌 状态：**必读 · 现行**
-> 版本：v0.2 — P0-00 现状基线。
+> 版本：v0.3 — P0-00 代码现状 / DOC-01 参考后端契约。
 > 本文件先记录当前代码事实；后续章节明确标为尚未落地的目标。结构/事件契约变更必须与代码同 commit 更新。
 
 ## 0. 当前结构（2026-10-05，P0-00）
@@ -27,6 +27,7 @@ docs/
 - 已有 UE **5.8.1** 源码版工程；`EngineAssociation` 保持 `{CDA1C7D2-461D-B7E1-E215-BBAA9D33582A}`。本机引擎位于 `D:/UE/Source/UnrealEngine-5.8.1-release`，版本由 `Engine/Build/Build.version` 与已有 Editor 日志交叉确认。两份 Target 使用 `Unreal5_8` include order 与 `BuildSettingsVersion.V7`。
 - 当前唯一 Runtime 模块 `QiantongCore` **仍是 UE 模板游戏模块，不是 Portable Core**：包含 `CoreMinimal.h`、模块注册宏，并依赖 Core/CoreUObject/Engine/InputCore/EnhancedInput。G0 是已知基线红项，需由 P0-01 拆分、P0-02 建门。
 - 当前没有 BattleSimulation、独立 Core harness、Bridge 或 ViewProxy；P0-01 起的任务仍为 TODO。下列第 1–12 节是后续实现的目标契约，不代表已有实现。
+- DOC-01 仅修订文档政策，允许按需接入 UE Reference Backend；目前没有 Contract 接口、参考后端或双后端测试代码。本次未添加 UE 模块依赖。
 - 现有地图与插件配置保留；Lumen/Nanite 等模板渲染设置仍在，但尚无 gameplay 实现或依赖。这些设置不构成表现验收证据。
 - Git 基线跟踪源码、Config、地图和文档；缓存、生成的解决方案、构建输出及本机 Editor 用户配置由 `.gitignore` 排除。二进制 UE 资产通过 `.gitattributes` 禁止文本换行转换。
 - Android 文件服务 `SecurityToken` 在共享配置中留空。修改前原始配置保存在不入库的 `Saved/LocalBaseline/DefaultEngine.ini`，不作为规则数据或项目真相源。
@@ -63,6 +64,7 @@ QiantongPrototype/
 │  │  └─ Private/
 │  └─ QiantongUE/                # Unreal host / adapter / view
 │     ├─ Bridge/
+│     ├─ ReferenceBackends/       # 按需创建，隔离 UE 参考实现
 │     ├─ View/
 │     ├─ UI/
 │     └─ Platform/
@@ -84,7 +86,7 @@ QiantongPrototype/
 
 ### QiantongCore
 
-唯一职责：确定性 gameplay state transition。
+职责：项目引擎中立 Contract、纯状态与确定性 Portable gameplay state transition。参考后端共享这些契约，不在 Core 中实现 UE 调用。
 
 允许输入：
 
@@ -104,16 +106,37 @@ QiantongPrototype/
 
 ### QiantongUE
 
-职责分四块：
+职责按 Host、可选参考后端与表现/平台划分：
 
 ```text
 Bridge/    fixed-step host, Core<->UE conversion
+ReferenceBackends/  optional GAS/StateTree/EQS adapters behind neutral contracts
 View/      unit/projectile/stage presentation
 UI/        UMG/view-model/input intents
 Platform/  JSON/file/save/audio/device adapter
 ```
 
 UI 不直接改 BattleState；UI 产生 `GameCommand` 或 Application action。
+
+### 可选 Reference Backend（目标契约，尚未实现）
+
+```text
+项目 Contract：plain DTO / stable ID / 行为与时间规范
+  ↑ implements                    ↑ adapts
+Portable C++ implementation       UE Reference Backend
+  ↑ selects                       ↑ selects
+             Application/Bridge
+                     ↓
+            Snapshot/Event → View/UI
+```
+
+Contract 可在 Core 的对应子系统中定义，不预建通用接口框架。以 TargetSelector 为例，Host 可选择 PortableTargetSelector 或 UEEQSTargetSelector；两者接受相同事实/候选 DTO，输出稳定 EntityId。Core 不 include、链接或持有 UE 类型，Host 负责转换、检查结果并按规定 tick/顺序提交。
+
+每次运行只选一个权威后端；对照运行使用独立状态副本。参考后端不得通过异步回调、Actor Tick、动画或碰撞事件直接写 BattleState。跨 tick 的语义状态可表达为中立 DTO；UE 句柄仅在 Adapter 内作运行时映射，不进入规范配置、存档或 UI ViewModel。未满足确定性与 DTO 边界的系统只可用于非权威实验。
+
+双后端只针对实际采用参考实现的系统：允许 UE 实验先行，标为探索中；对应规则卡完成前，Portable 必须在无 UE harness 中跑通，并按 `AGENTS.md` G6 比较逐 tick 行为、事件顺序及 Golden 结果。参考实现不自动拥有裁决权，差异回到 Contract/ledger 处理。P1.5 的 C++/TS 对照仍独立必需。
+
+UE 专属图表、DataAsset 可为实验适配/可重建缓存，不是可写规则数据库。表现系统则通过 FxRequest/ViewModel/GameCommand 等项目消息替换，不要求复刻 Niagara/UMG；Lumen/Nanite 不进入移动端玩法或内容标准。研究/复刻预算与源码独立实现纪律统一见 `AGENTS.md` 6.1。
 
 ---
 
@@ -174,6 +197,8 @@ UE View Registry
   EntityId -> weak Actor/ViewProxy
 ```
 
+上图是 Portable 默认路径。采用参考后端时，Host 另拥有适配器及运行时对象，权威语义状态仍须通过中立 DTO 表达；不能形成第二套独立 HP/AI 真相源。
+
 View Registry 允许丢失/重建。
 
 必须能执行：
@@ -196,7 +221,7 @@ Frame Delta
    ↓ accumulate
 while accumulator >= SIM_STEP:
    collect queued commands
-   Core.Step()
+   Step selected implementation through neutral contract
    emit events/snapshot
    accumulator -= SIM_STEP
    ↓
@@ -273,7 +298,7 @@ visualProfileId
 
 ## 8. AI 契约
 
-AI 是 Core 内的确定性 evaluator。
+AI 的 Portable 实现是 Core 内的确定性 evaluator；P0/P1 可由 Host 接入 StateTree/BT/EQS 参考实现来探索同一 Contract。配置与输出不使用 UE 节点或 Gameplay Tags 类型。
 
 建议输入：
 
@@ -383,3 +408,4 @@ QiantongCore/Run/*                   -> assets/scripts/rules/run/*
 |---|---|
 | v0.1 | 建立 Portable Core / UE Adapter / View 的初始目标结构。 |
 | v0.2 | P0-00：确认 UE 5.8.1 与真实模板模块，恢复规范文档路径，建立 Git 排除和资产属性；明确 G0 基线红项及尚未实现的目标。 |
+| v0.3 | DOC-01：允许隔离的 UE Reference Backend，补充中立契约、单一权威状态、按需双后端和 G6 迁移门；代码现状未变。 |
