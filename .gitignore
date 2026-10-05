@@ -1,0 +1,25 @@
+# Unreal generated files and local editor state
+/Binaries/
+/DerivedDataCache/
+/Intermediate/
+/Saved/
+/.vs/
+*.sln
+*.slnx
+*.suo
+*.VC.db
+*.VC.opendb
+/Config/DefaultEditorPerProjectUserSettings.ini
+
+# Standalone harness output
+/build/
+/out/
+__pycache__/
+*.pyc
+
+# Local credentials
+.env
+.env.*
+!.env.example
+*.key
+*.pfx
