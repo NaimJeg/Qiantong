@@ -1,0 +1,48 @@
+{
+  "ruleVersion": "demo-2",
+  "engine": "5.8.3",
+  "editorBuild": "PASS",
+  "coreTests": 2,
+  "automation": {
+    "succeeded": 4,
+    "failed": 0,
+    "warnings": 0,
+    "seedCount": 24,
+    "goldenCount": 8
+  },
+  "pie": [
+    {
+      "allies": 2,
+      "tick": 394,
+      "wavesCleared": 3,
+      "eventHash": "73d268a7",
+      "matchesGolden": true
+    },
+    {
+      "allies": 5,
+      "tick": 223,
+      "wavesCleared": 3,
+      "eventHash": "92480aa6",
+      "matchesGolden": true
+    }
+  ],
+  "dataOnlyBlueprints": 5,
+  "input": [
+    "mouse new seed",
+    "N new seed",
+    "Space pause"
+  ],
+  "visuals": [
+    "explore-laser.png",
+    "explore-hazard.png",
+    "explore-descent.png",
+    "explore-complete.png"
+  ],
+  "packaging": "NOT RUN: user approved Editor/Live Coding acceptance; retained Windows package is demo-1",
+  "sourceSha256": {
+    "Source\\QiantongUE\\Private\\DemoBattle.cpp": "0d4819ae6e3739c7fad99862d90eefe31c1cb5ab1e325ece83d26eaa372af7e0",
+    "Source\\QiantongUE\\Private\\DemoRuntime.cpp": "2f8f3f9ccbda10ffb6ac29d582c1633ed0c1968ce12a0f986deffa087310cd72",
+    "Source\\QiantongUE\\Private\\QiantongUE.cpp": "76580ec4c23c4b53ead77aac8824692bd749f4d7c11b26e96906052f5d936d22",
+    "Source\\QiantongUE\\Private\\Tests\\DemoBattleTests.cpp": "9f4c2e3c17e44dc5d0556d8a5bf003cc1a9bc51ebb94b1d72c9fb301e3dd9b4c"
+  }
+}

@@ -4,6 +4,22 @@
 > 状态：`TODO / DOING / BLOCKED / DONE`。
 > “DONE”必须附验收证据，不接受“代码已写”作为唯一证据。
 
+## 仓库发布
+
+| ID | 状态 | 任务 | 验收 |
+|---|---|---|---|
+| REPO-01 | DOING | 保留本地历史，将当前原型初始化到 GitHub NaimJeg/Qiantong | 远程确认为空；补充 README；Core 构建及 CTest 2/2 通过；待提交并校验远程分支 |
+
+## 当前闭环：竖井探索演示
+
+| ID | 状态 | 任务 | 验收 |
+|---|---|---|---|
+| DEMO-03 | DONE | 连续竖井、镜头先行、友军画外保X重布/停稳后走入；敌人提前布置找掩体，由镜头带入；Actor跨波生命周期 | DEMO-006；Editor最终构建成功、Core 2/2、UE自动化5/5；5纯数据蓝图审计；两人/五人PIE完整结果与Golden一致，23/26 Actor身份不变，波次间创建/销毁0。docs/exec/evidence/continuous-acceptance.json、continuous-*.png及result.json；Saved/Logs/Continuous-FinalBuild.log、Continuous-FinalTests.log、Continuous-Editor.log。未重复打包，旧包仍v1 |
+| DEMO-02 | DONE | 即时激光限速瞄准、随机障碍/自动避险及三段下行探索 | Editor 构建及 Live Coding 成功；CTest 2/2、UE Automation 4/4 无警告，24 seed/8 Golden；5 个纯数据蓝图编译审计；MCP PIE 两人/五人结果逐字段对齐，View重建、鼠标/键盘换seed与暂停通过；四张运行截图。证据 docs/exec/evidence/explore-acceptance.json、explore-*.png；Saved/Logs/Explore-FinalBuild.log、Explore-FinalTests.log、Explore-Editor.log；重启后 MCP/PIE 再次通过。按 DEMO-005 不重复打包，旧包仍为 v1 |
+| DEMO-01 | DONE | 集中模拟、演示关卡/蓝图、交互 HUD、Windows 独立包 | UE Automation 2/2、CTest 2/2、5 个纯数据蓝图审计通过；最终 BuildCookRun ExitCode=0；独立包 2v6/5v6 完整 JSON 与 Tests/Golden 一致；鼠标/键盘输入实测通过，用户确认“可用”。见 CHANGELOG、DEMO_HANDOFF、docs/exec/evidence/demo-combat.png；日志 Saved/Logs/Demo-FinalPackage.log、Demo-PackagedSmoke.log、Demo-InputEvidence.json |
+
+本轮由 DEMO-01 承接旧 P0-04..08、P1-01/02/04/05/08/09/10 的最小子集；其余规则后置，不将旧卡误标 DONE。P1.5/G6 改为进入 Cocos 前执行。旧表保留历史，不作为当前优先顺序。2026-10-06 项目 Editor 补编译与 CTest 2/2、MCP 握手已通过，证据 Saved/Logs/ProjectBuild-MCP.log 和 McpHandshake.json。
+
 ## 文档契约修订
 
 | ID | 状态 | 任务 | 完成定义/证据 |
@@ -14,10 +30,12 @@
 
 ## P0 — Portable Core / 工程初始化
 
+2026-10-05 审查：开发前回退提交为 `436cd8f`，当时工作区干净，故使用空提交。源码核对仅存在 UE 模板，P0 原有完成度为 1/9（P0-00），P1 为 0/10；没有可支持“P0 已完成”的规则或运行证据。用户随后明确本轮先完成 P0-01。仓库缺少上游 `03-设计交接/spec/ledger.md`，P1 玩法细节不能由计划中的建议自行补定；P0-02/03 工程基础不受此缺口阻塞。
+
 | ID | 状态 | 任务 | 完成定义/证据 |
 |---|---|---|---|
 | P0-00 | DONE | 确认/创建 UE 项目版本与 git 基线 | UE 5.8.1 由 Build.version/已有日志确认，保留原工程关联；本卡提交建立 Git 基线，规范文档入口与入库清单已核验。证据见 `docs/exec/CHANGELOG.md` 的 P0-00 记录；G0 模板依赖为基线红项，未宣称构建/运行验收。 |
-| P0-01 | TODO | 建立目录与 `QiantongCore` / `QiantongUE` 模块 | Build 成功；ARCHITECTURE 刷新为真实目录 |
+| P0-01 | DONE | 建立目录与 `QiantongCore` / `QiantongUE` 模块 | 2026-10-06 在用户授权的 UE 5.8.3 下补齐完整 Editor 构建、项目启动、MCP 握手及 CTest 2/2；模块清单由 UBT 生成，后续 DEMO-01 继续通过。此前 5.8.1 阻塞记录保留于 CHANGELOG。 |
 | P0-02 | TODO | 建 Core Boundary 检查 | 人工造一个 UE include 能让检查失败；撤销后通过 |
 | P0-03 | TODO | 建 `Types + EntityId + deterministic RNG + SimClock` | 单测；固定 seed 序列锁定；SIM_STEP 测试 |
 | P0-04 | TODO | 建 `BattleState/UnitState/Config/Command/Event/Snapshot` 最小 DTO | Core 无 UE 类型；可构造 fixture |

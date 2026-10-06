@@ -7,6 +7,12 @@
 
 | ID | 条目 | 状态 | 验收/落点 |
 |---|---|---|---|
+| DEMO-006 | 连续累计地图、镜头先行；友军完全画外仅纵向重布，镜头停稳后从上边缘走入；敌人提前布置并寻找掩体，由镜头带入；正常波次保留Actor身份 | 已定 | 用户本轮指令及后续澄清；DEMO_RULES v3；DEMO-03 |
+| DEMO-004 | 用户授权探索闭环：随机障碍、自动绕行/避险/射击位置、清场下行与波次；即时激光，瞄准最大转速；实验规则详见 DEMO_RULES v2 | 已定 | DEMO-02；覆盖 v1 横向纯表现及无探索范围 |
+| DEMO-005 | 本轮及后续 Editor/Live Coding、Terminal/MCP 验收演示可替代重复打包；上一轮包仅证明 v1 | 已定 | 用户本轮指令；Editor 测试、PIE运行及截图证据 |
+| DEMO-001 | UE 原生集中模拟 + 蓝图编排，Windows 可打包单场闭环；取代本轮 Portable-first 与 G6/P1.5 前置要求 | 已定 | 用户批准计划；AGENTS 顶部修订；DEMO_RULES.md |
+| DEMO-002 | 即时命中，首版到 P3 单视口；实验规则以 DEMO_RULES.md 为本轮依据 | 已定 | 覆盖 BAL-003 待决及 D-UE-003；玩法/运行测试 |
+| DEMO-003 | 使用本机已编译 UE 5.8.3，引擎源码只读、允许项目及所需产物编译；不自动改 EngineAssociation | 已定 | 用户已授权补编译并完成 MCP 握手；覆盖 ARC-011 本轮执行版本 |
 | ARC-001 | UE5 是原型验证宿主、成熟架构研究对象及参考后端平台，不是最终生产技术栈；最终目标仍为 Cocos Creator 3.8.8 + TypeScript + 移动/小游戏 | 已定 | `AGENTS.md`；不得出现不可替代的 UE-only gameplay semantic |
 | ARC-002 | gameplay Core 必须纯 ISO C++，禁止 Unreal headers/types/macros | 已定 | Core Boundary gate |
 | ARC-003 | UE Adapter/Reference Backend → 中立 Contract/Core；Host 组合后端；Core 不依赖 UE/View/Platform | 已定 | dependency scan；AGENTS 6.1 |
@@ -26,7 +32,7 @@
 | BAT-UE-004 | AI 契约采用 Condition/Selector/Action；P0/P1 可用 BT/StateTree/EQS 参考后端探索，Portable evaluator 承担无 UE 路径；UE 资产不做真相源 | 已定 | deterministic AI tests；采用参考后端时 G6 |
 | BAL-001 | 弹道拆分 Rule Semantic 与 Visual Trajectory；UE Projectile collision 不决定命中 | 已定 | collision-independent test |
 | BAL-002 | `ShotPlan` 至少具备 source/target/fireTick/impactTick/semantic/visualProfileId | 已定 | unit tests |
-| BAL-003 | 是否需要“真实飞行时间影响战术”必须由实验决定，P0 不默认引入复杂弹丸实体 | 待决 | 在 P2 Ballistic Lab 比较后裁决 |
+| BAL-003 | 本轮即时命中，仅视觉飞行；不引入在途规则弹丸 | 已定 | 用户批准计划；DEMO-002 / DEMO_RULES |
 | VIEW-001 | UE 竖屏原型以 720×1280 为设计基准，逻辑布局经 mapper 映射 | 已定 | viewport screenshot |
 | VIEW-002 | 左侧角色栏、竖井/战场、下方上涌方向遵循上游现行布局语义 | 已定 | visual evidence |
 | VIEW-003 | P0/P1 不使用 Lumen/Nanite/Chaos/NavMesh 形成玩法依赖 | 已定 | architecture review |

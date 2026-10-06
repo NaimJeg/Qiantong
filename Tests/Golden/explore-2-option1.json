@@ -1,0 +1,98 @@
+{
+	"ruleVersion": "demo-2",
+	"fixture": "explore-2",
+	"seed": 1,
+	"rngState": 3427210004,
+	"winner": "allies",
+	"simTicks": 417,
+	"shots": 87,
+	"targetSwitches": 49,
+	"wave": 3,
+	"wavesCleared": 3,
+	"descentTicks": 0,
+	"evasionSteps": 27,
+	"hazardsCreated": 3,
+	"hazardHits": 0,
+	"eventHash": "4382f2c4",
+	"energy": null,
+	"heat": null,
+	"skillCasts": null,
+	"remainingHp": [
+		{
+			"id": 1,
+			"hp": 520,
+			"x": 1500,
+			"y": 6500,
+			"aim": 45000
+		},
+		{
+			"id": 2,
+			"hp": 368,
+			"x": 2500,
+			"y": 7500,
+			"aim": 45000
+		},
+		{
+			"id": 301,
+			"hp": 0,
+			"x": 3500,
+			"y": 7500,
+			"aim": 251565
+		},
+		{
+			"id": 302,
+			"hp": 0,
+			"x": 2500,
+			"y": 7500,
+			"aim": 270000
+		},
+		{
+			"id": 303,
+			"hp": 0,
+			"x": 4500,
+			"y": 7500,
+			"aim": 225000
+		},
+		{
+			"id": 304,
+			"hp": 0,
+			"x": 3500,
+			"y": 8500,
+			"aim": 225000
+		},
+		{
+			"id": 305,
+			"hp": 0,
+			"x": 4500,
+			"y": 6500,
+			"aim": 153435
+		},
+		{
+			"id": 306,
+			"hp": 0,
+			"x": 2500,
+			"y": 8500,
+			"aim": 270000
+		},
+		{
+			"id": 307,
+			"hp": 0,
+			"x": 1500,
+			"y": 8500,
+			"aim": 315000
+		},
+		{
+			"id": 308,
+			"hp": 0,
+			"x": 2500,
+			"y": 7500,
+			"aim": 270000
+		}
+	],
+	"commands": [
+		{
+			"tick": 101,
+			"option": 1
+		}
+	]
+}

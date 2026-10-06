@@ -1,0 +1,65 @@
+{
+	"ruleVersion": "demo-1",
+	"fixture": "5v6",
+	"seed": 1,
+	"winner": "allies",
+	"simTicks": 140,
+	"shots": 38,
+	"targetSwitches": 31,
+	"eventHash": "2367f902",
+	"energy": null,
+	"heat": null,
+	"skillCasts": null,
+	"remainingHp": [
+		{
+			"id": 1,
+			"hp": 170
+		},
+		{
+			"id": 2,
+			"hp": 300
+		},
+		{
+			"id": 3,
+			"hp": 300
+		},
+		{
+			"id": 4,
+			"hp": 300
+		},
+		{
+			"id": 5,
+			"hp": 300
+		},
+		{
+			"id": 101,
+			"hp": 0
+		},
+		{
+			"id": 102,
+			"hp": 0
+		},
+		{
+			"id": 103,
+			"hp": 0
+		},
+		{
+			"id": 104,
+			"hp": 0
+		},
+		{
+			"id": 105,
+			"hp": 0
+		},
+		{
+			"id": 106,
+			"hp": 0
+		}
+	],
+	"commands": [
+		{
+			"tick": 101,
+			"option": 3
+		}
+	]
+}

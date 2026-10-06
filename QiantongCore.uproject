@@ -5,7 +5,7 @@
 	"Description": "",
 	"Modules": [
 		{
-			"Name": "QiantongCore",
+			"Name": "QiantongUE",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
@@ -20,19 +20,33 @@
 		},
 		{
 			"Name": "ModelContextProtocol",
-			"Enabled": true
+			"Enabled": true,
+			"TargetAllowList": ["Editor"]
 		},
 		{
 			"Name": "MCPClientToolset",
-			"Enabled": true
+			"Enabled": true,
+			"TargetAllowList": ["Editor"]
 		},
 		{
 			"Name": "Terminal",
-			"Enabled": true
+			"Enabled": true,
+			"TargetAllowList": ["Editor"]
 		},
 		{
 			"Name": "EditorToolset",
-			"Enabled": true
+			"Enabled": true,
+			"TargetAllowList": ["Editor"]
+		},
+		{
+			"Name": "PythonScriptPlugin",
+			"Enabled": true,
+			"TargetAllowList": ["Editor"]
+		},
+		{
+			"Name": "EditorScriptingUtilities",
+			"Enabled": true,
+			"TargetAllowList": ["Editor"]
 		}
 	]
 }

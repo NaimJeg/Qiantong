@@ -1,0 +1,239 @@
+{
+	"ruleVersion": "demo-3",
+	"fixture": "continuous-5",
+	"seed": 1,
+	"rngState": 2144056621,
+	"winner": "allies",
+	"simTicks": 308,
+	"shots": 86,
+	"targetSwitches": 99,
+	"cameraY": 52000,
+	"entering": false,
+	"relocations": 10,
+	"wave": 3,
+	"wavesCleared": 3,
+	"descentTicks": 0,
+	"evasionSteps": 17,
+	"hazardsCreated": 2,
+	"hazardHits": 0,
+	"eventHash": "26ca4053",
+	"energy": null,
+	"heat": null,
+	"skillCasts": null,
+	"remainingHp": [
+		{
+			"id": 1,
+			"generation": 1,
+			"hp": 488,
+			"x": 2500,
+			"y": 57500,
+			"aim": 90000
+		},
+		{
+			"id": 2,
+			"generation": 1,
+			"hp": 560,
+			"x": 2500,
+			"y": 58500,
+			"aim": 0
+		},
+		{
+			"id": 3,
+			"generation": 1,
+			"hp": 584,
+			"x": 5500,
+			"y": 56900,
+			"aim": 149036
+		},
+		{
+			"id": 4,
+			"generation": 1,
+			"hp": 560,
+			"x": 4500,
+			"y": 56900,
+			"aim": 134565
+		},
+		{
+			"id": 5,
+			"generation": 1,
+			"hp": 592,
+			"x": 5500,
+			"y": 57500,
+			"aim": 153000
+		},
+		{
+			"id": 101,
+			"generation": 1,
+			"hp": 0,
+			"x": 1500,
+			"y": 6500,
+			"aim": 296565
+		},
+		{
+			"id": 102,
+			"generation": 1,
+			"hp": 0,
+			"x": 1500,
+			"y": 7500,
+			"aim": 288435
+		},
+		{
+			"id": 103,
+			"generation": 1,
+			"hp": 0,
+			"x": 500,
+			"y": 6500,
+			"aim": 329036
+		},
+		{
+			"id": 104,
+			"generation": 1,
+			"hp": 0,
+			"x": 4500,
+			"y": 6900,
+			"aim": 263660
+		},
+		{
+			"id": 105,
+			"generation": 1,
+			"hp": 0,
+			"x": 3500,
+			"y": 6500,
+			"aim": 296565
+		},
+		{
+			"id": 106,
+			"generation": 1,
+			"hp": 0,
+			"x": 6500,
+			"y": 7500,
+			"aim": 270000
+		},
+		{
+			"id": 201,
+			"generation": 2,
+			"hp": 0,
+			"x": 2500,
+			"y": 33500,
+			"aim": 270000
+		},
+		{
+			"id": 202,
+			"generation": 2,
+			"hp": 0,
+			"x": 2500,
+			"y": 32500,
+			"aim": 270000
+		},
+		{
+			"id": 203,
+			"generation": 2,
+			"hp": 0,
+			"x": 2500,
+			"y": 31500,
+			"aim": 270000
+		},
+		{
+			"id": 204,
+			"generation": 2,
+			"hp": 0,
+			"x": 2500,
+			"y": 31500,
+			"aim": 270000
+		},
+		{
+			"id": 205,
+			"generation": 2,
+			"hp": 0,
+			"x": 5500,
+			"y": 31500,
+			"aim": 251565
+		},
+		{
+			"id": 206,
+			"generation": 2,
+			"hp": 0,
+			"x": 2500,
+			"y": 30500,
+			"aim": 270000
+		},
+		{
+			"id": 207,
+			"generation": 2,
+			"hp": 0,
+			"x": 2500,
+			"y": 31500,
+			"aim": 270000
+		},
+		{
+			"id": 301,
+			"generation": 3,
+			"hp": 0,
+			"x": 2500,
+			"y": 58500,
+			"aim": 270000
+		},
+		{
+			"id": 302,
+			"generation": 3,
+			"hp": 0,
+			"x": 1500,
+			"y": 58500,
+			"aim": 288435
+		},
+		{
+			"id": 303,
+			"generation": 3,
+			"hp": 0,
+			"x": 4500,
+			"y": 58500,
+			"aim": 270000
+		},
+		{
+			"id": 304,
+			"generation": 3,
+			"hp": 0,
+			"x": 4500,
+			"y": 58500,
+			"aim": 270000
+		},
+		{
+			"id": 305,
+			"generation": 3,
+			"hp": 0,
+			"x": 4500,
+			"y": 57500,
+			"aim": 296565
+		},
+		{
+			"id": 306,
+			"generation": 3,
+			"hp": 0,
+			"x": 5500,
+			"y": 58500,
+			"aim": 251565
+		},
+		{
+			"id": 307,
+			"generation": 3,
+			"hp": 0,
+			"x": 5500,
+			"y": 57500,
+			"aim": 270000
+		},
+		{
+			"id": 308,
+			"generation": 3,
+			"hp": 0,
+			"x": 2500,
+			"y": 57500,
+			"aim": 270000
+		}
+	],
+	"commands": [
+		{
+			"tick": 133,
+			"option": 2
+		}
+	]
+}

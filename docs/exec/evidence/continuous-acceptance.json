@@ -1,0 +1,992 @@
+{
+  "ruleVersion": "demo-3",
+  "automationPassed": 5,
+  "coreTestsPassed": 2,
+  "pie": [
+    {
+      "allies": 2,
+      "actors": 23,
+      "createdDuringWaves": 0,
+      "destroyedDuringWaves": 0,
+      "identityUnchanged": true,
+      "goldenAllFieldsEqual": true,
+      "ticks": 427,
+      "eventHash": "8e46c5cc"
+    },
+    {
+      "allies": 5,
+      "actors": 26,
+      "createdDuringWaves": 0,
+      "destroyedDuringWaves": 0,
+      "identityUnchanged": true,
+      "goldenAllFieldsEqual": true,
+      "ticks": 277,
+      "eventHash": "a664f106"
+    }
+  ],
+  "blueprintsCompiledDataOnly": 5,
+  "editorRestartMcpPiePassed": true,
+  "engineSourceChanged": false,
+  "packageRebuilt": false,
+  "existingPackageVersion": "demo-1",
+  "actorAudit2": {
+    "Before": {
+      "tick": 65,
+      "wave": 1,
+      "cameraY": 0,
+      "created": 46,
+      "destroyed": 23,
+      "actors": [
+        {
+          "unitId": 1,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_23",
+          "objectId": 62716
+        },
+        {
+          "unitId": 2,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_24",
+          "objectId": 62714
+        },
+        {
+          "unitId": 101,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_25",
+          "objectId": 62712
+        },
+        {
+          "unitId": 102,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_26",
+          "objectId": 62710
+        },
+        {
+          "unitId": 103,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_27",
+          "objectId": 62708
+        },
+        {
+          "unitId": 104,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_28",
+          "objectId": 62706
+        },
+        {
+          "unitId": 105,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_29",
+          "objectId": 62704
+        },
+        {
+          "unitId": 106,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_30",
+          "objectId": 62702
+        },
+        {
+          "unitId": 201,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_31",
+          "objectId": 62700
+        },
+        {
+          "unitId": 202,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_32",
+          "objectId": 62698
+        },
+        {
+          "unitId": 203,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_33",
+          "objectId": 62696
+        },
+        {
+          "unitId": 204,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_34",
+          "objectId": 62694
+        },
+        {
+          "unitId": 205,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_35",
+          "objectId": 62692
+        },
+        {
+          "unitId": 206,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_36",
+          "objectId": 62690
+        },
+        {
+          "unitId": 207,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_37",
+          "objectId": 62688
+        },
+        {
+          "unitId": 301,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_38",
+          "objectId": 62686
+        },
+        {
+          "unitId": 302,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_39",
+          "objectId": 62684
+        },
+        {
+          "unitId": 303,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_40",
+          "objectId": 62682
+        },
+        {
+          "unitId": 304,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_41",
+          "objectId": 62680
+        },
+        {
+          "unitId": 305,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_42",
+          "objectId": 62678
+        },
+        {
+          "unitId": 306,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_43",
+          "objectId": 62676
+        },
+        {
+          "unitId": 307,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_44",
+          "objectId": 62674
+        },
+        {
+          "unitId": 308,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_45",
+          "objectId": 62672
+        }
+      ]
+    },
+    "After": {
+      "tick": 427,
+      "wave": 3,
+      "cameraY": 52000,
+      "created": 46,
+      "destroyed": 23,
+      "actors": [
+        {
+          "unitId": 1,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_23",
+          "objectId": 62716
+        },
+        {
+          "unitId": 2,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_24",
+          "objectId": 62714
+        },
+        {
+          "unitId": 101,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_25",
+          "objectId": 62712
+        },
+        {
+          "unitId": 102,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_26",
+          "objectId": 62710
+        },
+        {
+          "unitId": 103,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_27",
+          "objectId": 62708
+        },
+        {
+          "unitId": 104,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_28",
+          "objectId": 62706
+        },
+        {
+          "unitId": 105,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_29",
+          "objectId": 62704
+        },
+        {
+          "unitId": 106,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_30",
+          "objectId": 62702
+        },
+        {
+          "unitId": 201,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_31",
+          "objectId": 62700
+        },
+        {
+          "unitId": 202,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_32",
+          "objectId": 62698
+        },
+        {
+          "unitId": 203,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_33",
+          "objectId": 62696
+        },
+        {
+          "unitId": 204,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_34",
+          "objectId": 62694
+        },
+        {
+          "unitId": 205,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_35",
+          "objectId": 62692
+        },
+        {
+          "unitId": 206,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_36",
+          "objectId": 62690
+        },
+        {
+          "unitId": 207,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_37",
+          "objectId": 62688
+        },
+        {
+          "unitId": 301,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_38",
+          "objectId": 62686
+        },
+        {
+          "unitId": 302,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_39",
+          "objectId": 62684
+        },
+        {
+          "unitId": 303,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_40",
+          "objectId": 62682
+        },
+        {
+          "unitId": 304,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_41",
+          "objectId": 62680
+        },
+        {
+          "unitId": 305,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_42",
+          "objectId": 62678
+        },
+        {
+          "unitId": 306,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_43",
+          "objectId": 62676
+        },
+        {
+          "unitId": 307,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_44",
+          "objectId": 62674
+        },
+        {
+          "unitId": 308,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_45",
+          "objectId": 62672
+        }
+      ]
+    }
+  },
+  "actorAudit5": {
+    "Before": {
+      "tick": 65,
+      "wave": 1,
+      "cameraY": 0,
+      "created": 72,
+      "destroyed": 46,
+      "actors": [
+        {
+          "unitId": 1,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_46",
+          "objectId": 62749
+        },
+        {
+          "unitId": 2,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_47",
+          "objectId": 62747
+        },
+        {
+          "unitId": 3,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_48",
+          "objectId": 62745
+        },
+        {
+          "unitId": 4,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_49",
+          "objectId": 62743
+        },
+        {
+          "unitId": 5,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_50",
+          "objectId": 62741
+        },
+        {
+          "unitId": 101,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_51",
+          "objectId": 62739
+        },
+        {
+          "unitId": 102,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_52",
+          "objectId": 62737
+        },
+        {
+          "unitId": 103,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_53",
+          "objectId": 62735
+        },
+        {
+          "unitId": 104,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_54",
+          "objectId": 62733
+        },
+        {
+          "unitId": 105,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_55",
+          "objectId": 62731
+        },
+        {
+          "unitId": 106,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_56",
+          "objectId": 62729
+        },
+        {
+          "unitId": 201,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_57",
+          "objectId": 62726
+        },
+        {
+          "unitId": 202,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_58",
+          "objectId": 62724
+        },
+        {
+          "unitId": 203,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_59",
+          "objectId": 62606
+        },
+        {
+          "unitId": 204,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_60",
+          "objectId": 62604
+        },
+        {
+          "unitId": 205,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_61",
+          "objectId": 62461
+        },
+        {
+          "unitId": 206,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_62",
+          "objectId": 62459
+        },
+        {
+          "unitId": 207,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_63",
+          "objectId": 62316
+        },
+        {
+          "unitId": 301,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_64",
+          "objectId": 62314
+        },
+        {
+          "unitId": 302,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_65",
+          "objectId": 62171
+        },
+        {
+          "unitId": 303,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_66",
+          "objectId": 62169
+        },
+        {
+          "unitId": 304,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_67",
+          "objectId": 62032
+        },
+        {
+          "unitId": 305,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_68",
+          "objectId": 62030
+        },
+        {
+          "unitId": 306,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_69",
+          "objectId": 62028
+        },
+        {
+          "unitId": 307,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_70",
+          "objectId": 62026
+        },
+        {
+          "unitId": 308,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_71",
+          "objectId": 62024
+        }
+      ]
+    },
+    "After": {
+      "tick": 277,
+      "wave": 3,
+      "cameraY": 52000,
+      "created": 72,
+      "destroyed": 46,
+      "actors": [
+        {
+          "unitId": 1,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_46",
+          "objectId": 62749
+        },
+        {
+          "unitId": 2,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_47",
+          "objectId": 62747
+        },
+        {
+          "unitId": 3,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_48",
+          "objectId": 62745
+        },
+        {
+          "unitId": 4,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_49",
+          "objectId": 62743
+        },
+        {
+          "unitId": 5,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_50",
+          "objectId": 62741
+        },
+        {
+          "unitId": 101,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_51",
+          "objectId": 62739
+        },
+        {
+          "unitId": 102,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_52",
+          "objectId": 62737
+        },
+        {
+          "unitId": 103,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_53",
+          "objectId": 62735
+        },
+        {
+          "unitId": 104,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_54",
+          "objectId": 62733
+        },
+        {
+          "unitId": 105,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_55",
+          "objectId": 62731
+        },
+        {
+          "unitId": 106,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_56",
+          "objectId": 62729
+        },
+        {
+          "unitId": 201,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_57",
+          "objectId": 62726
+        },
+        {
+          "unitId": 202,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_58",
+          "objectId": 62724
+        },
+        {
+          "unitId": 203,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_59",
+          "objectId": 62606
+        },
+        {
+          "unitId": 204,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_60",
+          "objectId": 62604
+        },
+        {
+          "unitId": 205,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_61",
+          "objectId": 62461
+        },
+        {
+          "unitId": 206,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_62",
+          "objectId": 62459
+        },
+        {
+          "unitId": 207,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_63",
+          "objectId": 62316
+        },
+        {
+          "unitId": 301,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_64",
+          "objectId": 62314
+        },
+        {
+          "unitId": 302,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_65",
+          "objectId": 62171
+        },
+        {
+          "unitId": 303,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_66",
+          "objectId": 62169
+        },
+        {
+          "unitId": 304,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_67",
+          "objectId": 62032
+        },
+        {
+          "unitId": 305,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_68",
+          "objectId": 62030
+        },
+        {
+          "unitId": 306,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_69",
+          "objectId": 62028
+        },
+        {
+          "unitId": 307,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_70",
+          "objectId": 62026
+        },
+        {
+          "unitId": 308,
+          "actor": "/Game/Demo/Maps/UEDPIE_0_L_Demo.L_Demo:PersistentLevel.BP_UnitView_C_71",
+          "objectId": 62024
+        }
+      ]
+    }
+  },
+  "arrival": {
+    "ruleVersion": "demo-3",
+    "fixture": "continuous-2",
+    "seed": 1,
+    "rngState": 2144056621,
+    "winner": "running",
+    "simTicks": 169,
+    "shots": 32,
+    "targetSwitches": 15,
+    "cameraY": 23400,
+    "entering": false,
+    "relocations": 0,
+    "wave": 1,
+    "wavesCleared": 1,
+    "descentTicks": 4,
+    "evasionSteps": 7,
+    "hazardsCreated": 1,
+    "hazardHits": 0,
+    "eventHash": "a4f095ac",
+    "energy": null,
+    "heat": null,
+    "skillCasts": null,
+    "remainingHp": [
+      {
+        "id": 1,
+        "generation": 1,
+        "hp": 528,
+        "x": 2500,
+        "y": 7900,
+        "aim": 206565
+      },
+      {
+        "id": 2,
+        "generation": 1,
+        "hp": 552,
+        "x": 3500,
+        "y": 12700,
+        "aim": 161565
+      },
+      {
+        "id": 101,
+        "generation": 1,
+        "hp": 0,
+        "x": 1500,
+        "y": 6500,
+        "aim": 45000
+      },
+      {
+        "id": 102,
+        "generation": 1,
+        "hp": 0,
+        "x": 1500,
+        "y": 7500,
+        "aim": 0
+      },
+      {
+        "id": 103,
+        "generation": 1,
+        "hp": 0,
+        "x": 500,
+        "y": 6500,
+        "aim": 26565
+      },
+      {
+        "id": 104,
+        "generation": 1,
+        "hp": 0,
+        "x": 4500,
+        "y": 6500,
+        "aim": 270000
+      },
+      {
+        "id": 105,
+        "generation": 1,
+        "hp": 0,
+        "x": 4500,
+        "y": 5500,
+        "aim": 270000
+      },
+      {
+        "id": 106,
+        "generation": 1,
+        "hp": 0,
+        "x": 4500,
+        "y": 6500,
+        "aim": 270000
+      },
+      {
+        "id": 201,
+        "generation": 2,
+        "hp": 90,
+        "x": 500,
+        "y": 34500,
+        "aim": 270000
+      },
+      {
+        "id": 202,
+        "generation": 2,
+        "hp": 90,
+        "x": 1500,
+        "y": 33500,
+        "aim": 270000
+      },
+      {
+        "id": 203,
+        "generation": 2,
+        "hp": 90,
+        "x": 1500,
+        "y": 33500,
+        "aim": 270000
+      },
+      {
+        "id": 204,
+        "generation": 2,
+        "hp": 90,
+        "x": 6500,
+        "y": 33500,
+        "aim": 270000
+      },
+      {
+        "id": 205,
+        "generation": 2,
+        "hp": 90,
+        "x": 5500,
+        "y": 32500,
+        "aim": 270000
+      },
+      {
+        "id": 206,
+        "generation": 2,
+        "hp": 90,
+        "x": 6500,
+        "y": 33500,
+        "aim": 270000
+      },
+      {
+        "id": 207,
+        "generation": 2,
+        "hp": 90,
+        "x": 7500,
+        "y": 34500,
+        "aim": 270000
+      },
+      {
+        "id": 301,
+        "generation": 3,
+        "hp": 90,
+        "x": 1500,
+        "y": 60500,
+        "aim": 270000
+      },
+      {
+        "id": 302,
+        "generation": 3,
+        "hp": 90,
+        "x": 500,
+        "y": 59500,
+        "aim": 270000
+      },
+      {
+        "id": 303,
+        "generation": 3,
+        "hp": 90,
+        "x": 4500,
+        "y": 60500,
+        "aim": 270000
+      },
+      {
+        "id": 304,
+        "generation": 3,
+        "hp": 90,
+        "x": 4500,
+        "y": 60500,
+        "aim": 270000
+      },
+      {
+        "id": 305,
+        "generation": 3,
+        "hp": 90,
+        "x": 5500,
+        "y": 61500,
+        "aim": 270000
+      },
+      {
+        "id": 306,
+        "generation": 3,
+        "hp": 90,
+        "x": 4500,
+        "y": 60500,
+        "aim": 270000
+      },
+      {
+        "id": 307,
+        "generation": 3,
+        "hp": 90,
+        "x": 6500,
+        "y": 60500,
+        "aim": 270000
+      },
+      {
+        "id": 308,
+        "generation": 3,
+        "hp": 90,
+        "x": 500,
+        "y": 59500,
+        "aim": 270000
+      }
+    ],
+    "commands": [
+      {
+        "tick": 101,
+        "option": 3
+      }
+    ]
+  },
+  "entry": {
+    "ruleVersion": "demo-3",
+    "fixture": "continuous-2",
+    "seed": 1,
+    "rngState": 2144056621,
+    "winner": "running",
+    "simTicks": 182,
+    "shots": 32,
+    "targetSwitches": 15,
+    "cameraY": 26000,
+    "entering": true,
+    "relocations": 2,
+    "wave": 2,
+    "wavesCleared": 1,
+    "descentTicks": 0,
+    "evasionSteps": 7,
+    "hazardsCreated": 1,
+    "hazardHits": 0,
+    "eventHash": "f1ba4fcf",
+    "energy": null,
+    "heat": null,
+    "skillCasts": null,
+    "remainingHp": [
+      {
+        "id": 1,
+        "generation": 1,
+        "hp": 528,
+        "x": 2500,
+        "y": 26600,
+        "aim": 206565
+      },
+      {
+        "id": 2,
+        "generation": 1,
+        "hp": 552,
+        "x": 3500,
+        "y": 26600,
+        "aim": 161565
+      },
+      {
+        "id": 101,
+        "generation": 1,
+        "hp": 0,
+        "x": 1500,
+        "y": 6500,
+        "aim": 45000
+      },
+      {
+        "id": 102,
+        "generation": 1,
+        "hp": 0,
+        "x": 1500,
+        "y": 7500,
+        "aim": 0
+      },
+      {
+        "id": 103,
+        "generation": 1,
+        "hp": 0,
+        "x": 500,
+        "y": 6500,
+        "aim": 26565
+      },
+      {
+        "id": 104,
+        "generation": 1,
+        "hp": 0,
+        "x": 4500,
+        "y": 6500,
+        "aim": 270000
+      },
+      {
+        "id": 105,
+        "generation": 1,
+        "hp": 0,
+        "x": 4500,
+        "y": 5500,
+        "aim": 270000
+      },
+      {
+        "id": 106,
+        "generation": 1,
+        "hp": 0,
+        "x": 4500,
+        "y": 6500,
+        "aim": 270000
+      },
+      {
+        "id": 201,
+        "generation": 2,
+        "hp": 90,
+        "x": 500,
+        "y": 34500,
+        "aim": 270000
+      },
+      {
+        "id": 202,
+        "generation": 2,
+        "hp": 90,
+        "x": 1500,
+        "y": 33500,
+        "aim": 270000
+      },
+      {
+        "id": 203,
+        "generation": 2,
+        "hp": 90,
+        "x": 1500,
+        "y": 33500,
+        "aim": 270000
+      },
+      {
+        "id": 204,
+        "generation": 2,
+        "hp": 90,
+        "x": 6500,
+        "y": 33500,
+        "aim": 270000
+      },
+      {
+        "id": 205,
+        "generation": 2,
+        "hp": 90,
+        "x": 5500,
+        "y": 32500,
+        "aim": 270000
+      },
+      {
+        "id": 206,
+        "generation": 2,
+        "hp": 90,
+        "x": 6500,
+        "y": 33500,
+        "aim": 270000
+      },
+      {
+        "id": 207,
+        "generation": 2,
+        "hp": 90,
+        "x": 7500,
+        "y": 34500,
+        "aim": 270000
+      },
+      {
+        "id": 301,
+        "generation": 3,
+        "hp": 90,
+        "x": 1500,
+        "y": 60500,
+        "aim": 270000
+      },
+      {
+        "id": 302,
+        "generation": 3,
+        "hp": 90,
+        "x": 500,
+        "y": 59500,
+        "aim": 270000
+      },
+      {
+        "id": 303,
+        "generation": 3,
+        "hp": 90,
+        "x": 4500,
+        "y": 60500,
+        "aim": 270000
+      },
+      {
+        "id": 304,
+        "generation": 3,
+        "hp": 90,
+        "x": 4500,
+        "y": 60500,
+        "aim": 270000
+      },
+      {
+        "id": 305,
+        "generation": 3,
+        "hp": 90,
+        "x": 5500,
+        "y": 61500,
+        "aim": 270000
+      },
+      {
+        "id": 306,
+        "generation": 3,
+        "hp": 90,
+        "x": 4500,
+        "y": 60500,
+        "aim": 270000
+      },
+      {
+        "id": 307,
+        "generation": 3,
+        "hp": 90,
+        "x": 6500,
+        "y": 60500,
+        "aim": 270000
+      },
+      {
+        "id": 308,
+        "generation": 3,
+        "hp": 90,
+        "x": 500,
+        "y": 59500,
+        "aim": 270000
+      }
+    ],
+    "commands": [
+      {
+        "tick": 101,
+        "option": 3
+      }
+    ]
+  }
+}
