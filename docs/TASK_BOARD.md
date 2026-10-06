@@ -8,7 +8,7 @@
 
 | ID | 状态 | 任务 | 验收 |
 |---|---|---|---|
-| REPO-01 | DOING | 保留本地历史，将当前原型初始化到 GitHub NaimJeg/Qiantong | 远程确认为空；补充 README；Core 构建及 CTest 2/2 通过；待提交并校验远程分支 |
+| REPO-01 | DONE | 保留本地历史，将当前原型初始化到 GitHub NaimJeg/Qiantong | 原型提交 `44af531` 已推送至 origin/master，ls-remote 核对一致；README、源码、资产及证据在位；Core 构建及 CTest 2/2、暂存差异空白检查通过 |
 
 ## 当前闭环：竖井探索演示
 
