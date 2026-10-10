@@ -1,0 +1,321 @@
+{
+  "source": "UE CSV profiler; timings in milliseconds; scope values are inclusive totals per render frame",
+  "mode": "Editor floating PIE",
+  "resolution": [
+    720,
+    1280
+  ],
+  "scenario": {
+    "allies": 5,
+    "preplacedEnemies": 21,
+    "seed": 1,
+    "protocol": 3
+  },
+  "warmupSeconds": 8,
+  "runs": [
+    {
+      "label": "smooth-120fps-1x-on",
+      "frames": 1649,
+      "eventHash": "a664f106",
+      "actorCount": 26,
+      "actorIdentityPreserved": true,
+      "timingMs": {
+        "FrameTime": {
+          "p50": 8.3334,
+          "p95": 8.3352,
+          "max": 11.4416
+        },
+        "GameThreadTime": {
+          "p50": 4.045,
+          "p95": 4.9288,
+          "max": 11.6177
+        },
+        "GPUTime": {
+          "p50": 1.6339,
+          "p95": 2.0431,
+          "max": 2.9521
+        },
+        "Qiantong/GameThread/QT_BattleStep": {
+          "p50": 0.0,
+          "p95": 0.0077,
+          "max": 0.0314
+        },
+        "Qiantong/GameThread/QT_AdvanceCover": {
+          "p50": 0.0,
+          "p95": 0.0014,
+          "max": 0.0189
+        },
+        "Qiantong/GameThread/QT_NextCell": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "max": 0.0242
+        },
+        "Qiantong/GameThread/QT_ClearRay": {
+          "p50": 0.0,
+          "p95": 0.0008,
+          "max": 0.0028
+        },
+        "Qiantong/GameThread/QT_SyncViews": {
+          "p50": 0.016,
+          "p95": 0.0254,
+          "max": 0.0573
+        },
+        "Qiantong/GameThread/QT_DrawHUD": {
+          "p50": 0.1337,
+          "p95": 0.1626,
+          "max": 0.2723
+        }
+      },
+      "simStepsPerFrameMax": 1.0,
+      "fps": {
+        "p50": 119.99904000767995,
+        "p95": 120.02352461082373,
+        "max": 120.12877805006967
+      },
+      "backlogSecondsMax": 0.0,
+      "viewSyncsPerFrameMax": 1.0,
+      "firstWaveMovingFrameDeltas": {
+        "p50": 1.6666993498802185,
+        "p95": 1.6667000949382782,
+        "max": 2.286919951438904
+      },
+      "sampleFile": "Saved/SmoothPIE/smooth-120fps-1x-on.json"
+    },
+    {
+      "label": "smooth-60fps-10x-on",
+      "frames": 83,
+      "eventHash": "a664f106",
+      "actorCount": 26,
+      "actorIdentityPreserved": true,
+      "timingMs": {
+        "FrameTime": {
+          "p50": 16.6668,
+          "p95": 16.6692,
+          "max": 16.6873
+        },
+        "GameThreadTime": {
+          "p50": 4.6246,
+          "p95": 5.6898,
+          "max": 16.3003
+        },
+        "GPUTime": {
+          "p50": 1.6493,
+          "p95": 2.021,
+          "max": 2.6337
+        },
+        "Qiantong/GameThread/QT_BattleStep": {
+          "p50": 0.0154,
+          "p95": 0.0347,
+          "max": 0.0489
+        },
+        "Qiantong/GameThread/QT_AdvanceCover": {
+          "p50": 0.002,
+          "p95": 0.011,
+          "max": 0.0251
+        },
+        "Qiantong/GameThread/QT_NextCell": {
+          "p50": 0.0,
+          "p95": 0.019,
+          "max": 0.0314
+        },
+        "Qiantong/GameThread/QT_ClearRay": {
+          "p50": 0.0011,
+          "p95": 0.0045,
+          "max": 0.0059
+        },
+        "Qiantong/GameThread/QT_SyncViews": {
+          "p50": 0.0207,
+          "p95": 0.0294,
+          "max": 0.0329
+        },
+        "Qiantong/GameThread/QT_DrawHUD": {
+          "p50": 0.1449,
+          "p95": 0.1675,
+          "max": 0.2157
+        }
+      },
+      "simStepsPerFrameMax": 4.0,
+      "fps": {
+        "p50": 59.999520003839976,
+        "p95": 60.00744092267441,
+        "max": 60.087848434411114
+      },
+      "backlogSecondsMax": 0.0,
+      "viewSyncsPerFrameMax": 1.0,
+      "firstWaveMovingFrameDeltas": {
+        "p50": 33.33359956741333,
+        "p95": 33.33359956741333,
+        "max": 33.33359956741333
+      },
+      "sampleFile": "Saved/SmoothPIE/smooth-60fps-10x-on.json"
+    },
+    {
+      "label": "smooth-60fps-1x-off",
+      "frames": 825,
+      "eventHash": "a664f106",
+      "actorCount": 26,
+      "actorIdentityPreserved": true,
+      "timingMs": {
+        "FrameTime": {
+          "p50": 16.6667,
+          "p95": 16.6694,
+          "max": 20.0513
+        },
+        "GameThreadTime": {
+          "p50": 4.4926,
+          "p95": 5.4394,
+          "max": 19.275
+        },
+        "GPUTime": {
+          "p50": 1.8905,
+          "p95": 2.8987,
+          "max": 3.5119
+        },
+        "Qiantong/GameThread/QT_BattleStep": {
+          "p50": 0.0,
+          "p95": 0.0099,
+          "max": 0.0399
+        },
+        "Qiantong/GameThread/QT_AdvanceCover": {
+          "p50": 0.0,
+          "p95": 0.0018,
+          "max": 0.0214
+        },
+        "Qiantong/GameThread/QT_NextCell": {
+          "p50": 0.0,
+          "p95": 0.0015,
+          "max": 0.0279
+        },
+        "Qiantong/GameThread/QT_ClearRay": {
+          "p50": 0.0,
+          "p95": 0.0013,
+          "max": 0.0025
+        },
+        "Qiantong/GameThread/QT_SyncViews": {
+          "p50": 0.003,
+          "p95": 0.0268,
+          "max": 0.0397
+        },
+        "Qiantong/GameThread/QT_DrawHUD": {
+          "p50": 0.1389,
+          "p95": 0.1631,
+          "max": 0.2431
+        }
+      },
+      "simStepsPerFrameMax": 1.0,
+      "fps": {
+        "p50": 59.999880000240005,
+        "p95": 60.007801014131836,
+        "max": 60.050682776263166
+      },
+      "backlogSecondsMax": 0.0,
+      "viewSyncsPerFrameMax": 1.0,
+      "firstWaveMovingFrameDeltas": {
+        "p50": 10.0,
+        "p95": 10.0,
+        "max": 10.0
+      },
+      "sampleFile": "Saved/SmoothPIE/smooth-60fps-1x-off.json"
+    },
+    {
+      "label": "smooth-60fps-1x-on",
+      "frames": 825,
+      "eventHash": "a664f106",
+      "actorCount": 26,
+      "actorIdentityPreserved": true,
+      "timingMs": {
+        "FrameTime": {
+          "p50": 16.6667,
+          "p95": 16.6691,
+          "max": 16.6919
+        },
+        "GameThreadTime": {
+          "p50": 4.4679,
+          "p95": 5.3495,
+          "max": 10.1015
+        },
+        "GPUTime": {
+          "p50": 1.9472,
+          "p95": 2.4477,
+          "max": 3.0756
+        },
+        "Qiantong/GameThread/QT_BattleStep": {
+          "p50": 0.0,
+          "p95": 0.0108,
+          "max": 0.0304
+        },
+        "Qiantong/GameThread/QT_AdvanceCover": {
+          "p50": 0.0,
+          "p95": 0.0018,
+          "max": 0.0218
+        },
+        "Qiantong/GameThread/QT_NextCell": {
+          "p50": 0.0,
+          "p95": 0.0013,
+          "max": 0.024
+        },
+        "Qiantong/GameThread/QT_ClearRay": {
+          "p50": 0.0,
+          "p95": 0.0014,
+          "max": 0.0032
+        },
+        "Qiantong/GameThread/QT_SyncViews": {
+          "p50": 0.0181,
+          "p95": 0.0278,
+          "max": 0.0636
+        },
+        "Qiantong/GameThread/QT_DrawHUD": {
+          "p50": 0.1366,
+          "p95": 0.1612,
+          "max": 0.2766
+        }
+      },
+      "simStepsPerFrameMax": 1.0,
+      "fps": {
+        "p50": 59.999880000240005,
+        "p95": 60.007080835538595,
+        "max": 60.08712633318312
+      },
+      "backlogSecondsMax": 0.0,
+      "viewSyncsPerFrameMax": 1.0,
+      "firstWaveMovingFrameDeltas": {
+        "p50": 3.333359956741333,
+        "p95": 3.333359956741333,
+        "max": 3.3334799110889435
+      },
+      "sampleFile": "Saved/SmoothPIE/smooth-60fps-1x-on.json"
+    }
+  ],
+  "hardware": {
+    "cPUModel": "AMD Ryzen 9 9950X 16-Core Processor            ",
+    "gPU": "NVIDIA GeForce RTX 2080 Ti",
+    "rAMInGB": 62,
+    "oSVersion": "Windows 11 (25H2) [10.0.26200.9457] "
+  },
+  "displays": [
+    {
+      "Name": "MuMu Virtual Display Adapter",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "Todesk Virtual Display Adapter",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "AMD Radeon(TM) Graphics",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "NVIDIA GeForce RTX 2080 Ti",
+      "CurrentRefreshRate": 180,
+      "CurrentHorizontalResolution": 3440,
+      "CurrentVerticalResolution": 1440
+    }
+  ]
+}

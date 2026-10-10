@@ -35,6 +35,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File Tools/TestDemo.ps1 -EngineRo
 ## 工程入口
 
 - [开发契约](AGENTS.md)、[当前规则](docs/spec/DEMO_RULES.md)、[架构](docs/ARCHITECTURE.md)
+- [抽象边界](docs/spec/ABSTRACTION_BOUNDARIES.md)、[UE 到 Cocos 迁移计划](docs/plan/UE_TO_COCOS_MIGRATION.md)
 - [任务与验收状态](docs/TASK_BOARD.md)、[变更记录](docs/exec/CHANGELOG.md)
 - `Source/QiantongCore`：纯 C++ 库；`Source/QiantongUE`：UE 集中模拟与表现
 - `Content/Demo`：演示地图、材质及纯数据蓝图；`Tests/Golden`：各版本结果样本

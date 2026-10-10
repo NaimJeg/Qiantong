@@ -14,6 +14,7 @@
 
 | ID | 状态 | 任务 | 验收 |
 |---|---|---|---|
+| DEMO-04 | DOING | 位置/Aim/镜头帧级插值、单次View提交、障碍查询等价优化、HUD裁剪及性能基线 | DEMO-007；Editor构建、Core2/2、UE自动化7/7、八份demo-3 Golden一致、五纯数据蓝图编译；四场PIE完整Golden/26 Actor身份通过。smooth-performance.json及smooth-view-samples.json：60/120FPS、10×无backlog、每帧同步1次。60/120FPS视频和目视复核未完成：全编辑器截图被自动审批拒绝，已询问仅限PIE本地录制许可，待答复；未标DONE |
 | DEMO-03 | DONE | 连续竖井、镜头先行、友军画外保X重布/停稳后走入；敌人提前布置找掩体，由镜头带入；Actor跨波生命周期 | DEMO-006；Editor最终构建成功、Core 2/2、UE自动化5/5；5纯数据蓝图审计；两人/五人PIE完整结果与Golden一致，23/26 Actor身份不变，波次间创建/销毁0。docs/exec/evidence/continuous-acceptance.json、continuous-*.png及result.json；Saved/Logs/Continuous-FinalBuild.log、Continuous-FinalTests.log、Continuous-Editor.log。未重复打包，旧包仍v1 |
 | DEMO-02 | DONE | 即时激光限速瞄准、随机障碍/自动避险及三段下行探索 | Editor 构建及 Live Coding 成功；CTest 2/2、UE Automation 4/4 无警告，24 seed/8 Golden；5 个纯数据蓝图编译审计；MCP PIE 两人/五人结果逐字段对齐，View重建、鼠标/键盘换seed与暂停通过；四张运行截图。证据 docs/exec/evidence/explore-acceptance.json、explore-*.png；Saved/Logs/Explore-FinalBuild.log、Explore-FinalTests.log、Explore-Editor.log；重启后 MCP/PIE 再次通过。按 DEMO-005 不重复打包，旧包仍为 v1 |
 | DEMO-01 | DONE | 集中模拟、演示关卡/蓝图、交互 HUD、Windows 独立包 | UE Automation 2/2、CTest 2/2、5 个纯数据蓝图审计通过；最终 BuildCookRun ExitCode=0；独立包 2v6/5v6 完整 JSON 与 Tests/Golden 一致；鼠标/键盘输入实测通过，用户确认“可用”。见 CHANGELOG、DEMO_HANDOFF、docs/exec/evidence/demo-combat.png；日志 Saved/Logs/Demo-FinalPackage.log、Demo-PackagedSmoke.log、Demo-InputEvidence.json |
@@ -24,6 +25,7 @@
 
 | ID | 状态 | 任务 | 完成定义/证据 |
 |---|---|---|---|
+| DOC-02 | DONE | 项目文件权限修复，补齐当前抽象边界与 UE→Cocos 迁移计划 | 两个依赖目录恢复继承，.git 及其余沙箱所有者恢复 RNaim；全树 ACL 校验 21116 项、0失败；Core CTest 2/2，4份文档/19个本地链接及8份 demo-3 fixture 检查通过，diff 空白检查通过。见 spec/ABSTRACTION_BOUNDARIES.md、plan/UE_TO_COCOS_MIGRATION.md、exec/evidence/permissions-docs-20261010.json；仅权限与文档验收，保留 DEMO-04 状态和既有改动 |
 | DOC-01 | DONE | 以语义隔离替代 UE 高级系统笼统禁令 | AGENTS 6.1/G6、ARC-012/013、TEST-004 及需求/架构/计划同步；旧禁令检索与 diff 检查通过；详见 CHANGELOG。本卡仅文档验收，不代表后端实现或运行门通过。 |
 
 规则卡统一附加条件：若采用 UE Reference Backend，按 `AGENTS.md` G6 补齐 Portable 实现与双后端对照后才能 DONE；实验先行阶段记 DOING。未采用者不要求双后端；P1.5 的 Portable C++/TS 对照不豁免。

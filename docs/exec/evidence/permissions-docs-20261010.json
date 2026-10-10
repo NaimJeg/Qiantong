@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-10",
+  "scope": "QiantongCore project tree only",
+  "enumeratedItems": 21116,
+  "enumerationErrors": 0,
+  "owner": "MARK17\\RNaim",
+  "nonMatchingOwners": 0,
+  "dependencyInheritanceRepaired": [
+    "Saved/CaptureDeps/imageio_ffmpeg",
+    "Saved/CaptureDeps/imageio_ffmpeg-0.6.0.dist-info"
+  ],
+  "gitOwnerEntriesRepaired": 341,
+  "additionalOwnerEntriesRepaired": 77,
+  "aclVerificationProcessed": 21116,
+  "aclVerificationFailed": 0,
+  "existingDaclRulesPreserved": true,
+  "gitObjectReadonlyPreserved": true,
+  "userGitIgnore": "Normal owner ACL; initial sandbox-only access failure; unchanged",
+  "coreTestsPassed": 2,
+  "coreTestsTotal": 2
+}

@@ -1,5 +1,25 @@
 # 执行记录
 
+## 2026-10-10 — [DOC-02] 项目权限修复与抽象迁移文档
+
+- 按用户请求检查整个 QiantongCore 项目树。发现 Saved/CaptureDeps 下 imageio_ffmpeg 与 dist-info 两个目录未继承项目权限，恢复两棵目录树的继承（18及8项），保留原有访问控制项。将 .git 的341项及其余77项沙箱账号所有者恢复为 MARK17/RNaim，解决用户账号运行 Git 的 dubious ownership；未添加全局 safe.directory 例外。
+- 不变更引擎、插件和项目外文件权限。用户 Git ignore 的 ACL 正常，首次读取失败来自沙箱上下文；保留该配置原状。Git 对象只读属性与已有安全访问规则保留，没有清空 ACL 或向 Everyone 授权。
+- 新增 spec/ABSTRACTION_BOUNDARIES.md，描述现有规则/Host/View、权威状态、派生缓存、命令时序，以及 ResultJson 不是完整存档的限制。新增 plan/UE_TO_COCOS_MIGRATION.md，说明基线冻结、Portable 抽离、纯 TS 逐 tick 对照和 Cocos 表现接入；列出 RNG/hash/角度/射线/整数运算风险及退出条件。README、ARCHITECTURE 加入入口链接。
+- 全树 ACL 校验21116项、0失败；所有者复查通过。证据 exec/evidence/permissions-docs-20261010.json；本地 Saved/permission-acl-verification.log、permission-owner-backup.json 留存详细校验与77项变更前描述符。
+- 本轮执行 ctest --test-dir build/core -C Release --output-on-failure，CoreSmoke/ModuleLayout 2/2通过；4份文档UTF-8、代码围栏、19个本地链接及8份demo-3 fixture版本检查通过；git diff --check通过。没有修改玩法或表现代码，本轮未重跑 UE 构建/PIE，也未宣称迁移实现完成。
+- 保留会话开始时的 DEMO-04 未提交代码、文档及证据，DEMO-04继续DOING；未commit或push。
+
+## 2026-10-07 — [DEMO-04][DEMO-007] 平滑表现与性能基线（视觉录制待验收）
+
+- 按用户指定的 `Qiantong_DEMO04_plus_plan.md` 执行DEMO-04修复；DEMO-05～09未进入实现，保留用户原计划文件。开工时只有该未跟踪文件，无其他未提交代码。
+- 先补插值/射线测试，再实现非权威前后快照、最短角差Aim、统一Camera alpha、重开/重建/单步/画外重布样本重置。Step不再提交View，帧末一次提交；Actor/HUD共用姿态，隐藏和Transform仅变化时更新，屏外不提交Transform。
+- 障碍排序列表私有化，生成和SetObstacles维护585格mask；移动/掩体O(1)查询。射线使用行supercover与闭合slab判定，保留擦边/碰角语义。HUD二分定位可见行、缓存危险圈向量和Director、关闭Hover；加入六个UE Insights/CSV scope、步数/backlog/同步次数及SIM BEHIND提示。
+- Core 2/2、Editor构建通过，UE自动化7/7零失败/零警告：原5项、八份continuous Golden原样比较、30/60/120 FPS；新增30/60/120/144FPS插值开关隔离、角度跨零、重布/换ID；28,561条边界射线及24张地图共96,000条随机射线与旧slab算法对照。未修改任何Golden文件。
+- 五个纯数据蓝图编译审计通过。四场最终PIE（60/120FPS、10×、关闭插值）均在tick277以a664f106结束，完整JSON等于5人协议3Golden，26个Actor跨波身份保持。初轮验收脚本发现墙钟选择错过合法窗口且旧结果文件可能误导校验，修正为显式DemoOption在固定tick提交，并要求导出文件时间戳晚于本场开始；本记录仅使用重跑后的正式结果。
+- Ryzen 9 9950X / RTX2080Ti / 180Hz显示器，720×1280浮动PIE：60FPS 1×的Frame/GameThread/GPU p95=16.6691/5.3495/2.4477ms；120FPS Frame p95=8.3352ms。1×/10×backlog最大0、每帧View同步最大1；有效战斗帧未出现>33ms峰值。CSV scope分位数为每帧累计值，10×仅83个有效战斗帧，是初始短场景基线，未锁定长期硬件预算。
+- 证据：`docs/exec/evidence/smooth-performance.json`、`smooth-view-samples.json`；本地 `Saved/Logs/Smooth-Build.log`、`Smooth-Tests.log`、`Smooth-PIE.log`、`Demo-AssetAudit.json`、`Saved/SmoothPIE`、`Saved/Profiling/CSV`、`Smooth.utrace`。可复现工具 `VerifySmoothPIE.py` / `SummarizeSmooth.py`。
+- 全编辑器截图调用被自动审批拒绝，理由为可能传输额外编辑器内容。已询问仅限项目PIE窗口的本地录制许可，尚待答复。60/120FPS录像与目视复核未完成，因此DEMO-04保持DOING；已有自动化/PIE轨迹证据不冒充视频。未改引擎/插件源码、未重打包、未commit或push。
+
 ## 2026-10-06 — [DEMO-02][DEMO-004/005] 激光与竖井探索（Editor 验收通过）
 
 - 用户授权完成上轮建议的障碍、自动绕行/避险/射击位置和下行波次，并明确瞬时命中、激光表现与最大转速；随后明确本轮及以后可经 Editor/Live Coding、Terminal/MCP 验收，不重复打包。

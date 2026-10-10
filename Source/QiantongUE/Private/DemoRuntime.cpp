@@ -1,4 +1,7 @@
 #include "DemoRuntime.h"
+#include "Algo/BinarySearch.h"
+#include "ProfilingDebugging/CpuProfilerTrace.h"
+#include "ProfilingDebugging/CsvProfiler.h"
 #include "Camera/CameraComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/InputComponent.h"
@@ -19,6 +22,8 @@
 #include "HAL/IConsoleManager.h"
 #include "UObject/ConstructorHelpers.h"
 #include "UnrealClient.h"
+
+CSV_DECLARE_CATEGORY_EXTERN(Qiantong);
 
 namespace
 {
@@ -42,6 +47,8 @@ FAutoConsoleCommandWithWorldAndArgs DemoConsole(TEXT("qt.demo"),
         const FString& A=Args[0];
         if(A==TEXT("restart")) D->Restart();
         else if(A==TEXT("seed")) D->NewSeed();
+        else if(A==TEXT("interpolation")) D->InterpolateViews=Args.Num()<2 || FCString::Atoi(*Args[1])!=0;
+        else if(A==TEXT("speed") && Args.Num()>1) D->Speed=FMath::Clamp(FCString::Atoi(*Args[1]),1,10);
         else if(A==TEXT("pause")) D->Paused=!D->Paused;
         else if(A==TEXT("step")) D->SingleStep();
         else if(A==TEXT("rebuild")) D->RebuildViews();
@@ -109,9 +116,15 @@ void ADemoDirector::BeginPlay()
 }
 FVector2D ADemoDirector::ScreenPosition(const QiantongDemo::FUnit& U) const
 {
-    return MapPosition(U.X,U.Position);
+    const FVector P=RenderPose(U);
+    return MapPosition(P.X,P.Y);
 }
-FVector2D ADemoDirector::MapPosition(int32 X,int32 Y) const
+FVector ADemoDirector::RenderPose(const QiantongDemo::FUnit& U) const
+{
+    for(const auto& R:RenderSnapshot.Units) if(R.Id==U.Id) return R.Sample(RenderAlpha);
+    return FVector(U.X,U.Position,U.Aim);
+}
+FVector2D ADemoDirector::MapPosition(double X,double Y) const
 {
     return FVector2D(205+X*.05,235+(Y-RenderCameraY)*.05);
 }
@@ -142,28 +155,41 @@ void ADemoDirector::RebuildViews()
         }
         Views.Add(V);
     }
-    SyncViews();
+    RenderSnapshot.Capture(Battle,true);
+    SyncViews(1);
 }
-void ADemoDirector::SyncViews()
+void ADemoDirector::SyncViews(double Alpha)
 {
-    // Keep the orthographic view target beside its camera as the viewport descends.
-    // Auto orthographic planes use the owning actor as their reference point.
-    SetActorLocation(FVector(-RenderCameraY*.05,0,0));
-    Camera->SetRelativeLocation(FVector(0,0,1500));
-    Deck->SetRelativeLocation(FVector::ZeroVector);
+    TRACE_CPUPROFILER_EVENT_SCOPE(QT_SyncViews);
+    CSV_SCOPED_TIMING_STAT(Qiantong, QT_SyncViews);
+    CSV_CUSTOM_STAT(Qiantong, ViewSyncs, 1, ECsvCustomStatOp::Accumulate);
+    RenderAlpha=Alpha;
+    RenderCameraY=FMath::Lerp(RenderSnapshot.PreviousCamera,RenderSnapshot.CurrentCamera,Alpha);
+    const FVector CameraLocation(-RenderCameraY*.05,0,0);
+    if(!GetActorLocation().Equals(CameraLocation)) SetActorLocation(CameraLocation);
     for (int32 I = 0; I < Views.Num(); ++I) if (IsValid(Views[I]))
     {
-        Views[I]->SetActorHiddenInGame(Battle.Units[I].Hp <= 0 || ScreenPosition(Battle.Units[I]).Y < 219 || ScreenPosition(Battle.Units[I]).Y > 901);
-        Views[I]->SetActorLocation(WorldPosition(FVector2D(205+Battle.Units[I].X*.05,235+Battle.Units[I].Position*.05)));
-        Views[I]->SetActorRotation(FRotator(0, Battle.Units[I].Aim / 1000.f + 90, 0));
+        const FVector P=RenderSnapshot.Units[I].Sample(Alpha);
+        const double ScreenY=MapPosition(P.X,P.Y).Y;
+        const bool Hidden=Battle.Units[I].Hp<=0 || ScreenY<219 || ScreenY>901;
+        if(Views[I]->IsHidden()!=Hidden) Views[I]->SetActorHiddenInGame(Hidden);
+        if(Hidden) continue;
+        const FVector Location=WorldPosition(FVector2D(205+P.X*.05,235+P.Y*.05));
+        const FRotator Rotation(0,P.Z/1000.0+90,0);
+        if(!Views[I]->GetActorLocation().Equals(Location) || !Views[I]->GetActorRotation().Equals(Rotation))
+            Views[I]->SetActorLocationAndRotation(Location,Rotation);
     }
 }
+
 void ADemoDirector::Step()
 {
     if (Battle.IsOver()) return;
-    if (SmokeTest && Battle.CanChoose() && SmokeOption > 0) PendingChoice = SmokeOption;
+    // Explicit -DemoOption is also used by Editor profiling to schedule the same
+    // command tick at every frame rate/speed. Normal launches leave it at zero.
+    if (Battle.CanChoose() && SmokeOption > 0) PendingChoice = SmokeOption;
     const int32 PreviousWave=Battle.Wave;
     Battle.Step(PendingChoice); PendingChoice = 0;
+    RenderSnapshot.Capture(Battle);
     if (PreviousWave!=Battle.Wave) { Traces.Reset();
         UE_LOG(LogTemp,Display,TEXT("QIANTONG_WAVE: %d seed=%u"),Battle.Wave,Battle.Seed); }
     for (const QiantongDemo::FShot& S : Battle.LastShots)
@@ -175,7 +201,6 @@ void ADemoDirector::Step()
         }
     }
     if (Battle.Choice && Battle.ChoiceTick == Battle.Tick) Notice = TEXT("Protocol installed. Watch your squad's next volley.");
-    SyncViews();
     // Normal play never rebuilds actors at a wave boundary.
     if (CaptureTicks > 0 && Battle.Tick >= CaptureTicks)
     {
@@ -195,15 +220,19 @@ void ADemoDirector::Tick(float DeltaSeconds)
     Traces.RemoveAll([](const FDemoTrace& T) { return T.Life <= 0; });
     const int32 Steps = Clock.Advance(DeltaSeconds, Speed, Paused || Battle.IsOver());
     for (int32 I = 0; I < Steps; ++I) Step();
-    RenderCameraY=FMath::FInterpConstantTo(RenderCameraY,double(Battle.CameraY),double(DeltaSeconds),13000.0*Speed);
-    SyncViews();
+    CSV_CUSTOM_STAT(Qiantong, SimSteps, Steps, ECsvCustomStatOp::Set);
+    CSV_CUSTOM_STAT(Qiantong, BacklogSeconds, float(GetSimBacklog()), ECsvCustomStatOp::Set);
+    CSV_CUSTOM_STAT(Qiantong, SimTick, Battle.Tick, ECsvCustomStatOp::Set);
+    CSV_CUSTOM_STAT(Qiantong, Speed, Speed, ECsvCustomStatOp::Set);
+    const double Alpha=InterpolateViews?FMath::Clamp(Clock.Remainder/QiantongDemo::StepSeconds,0.0,1.0):1.0;
+    SyncViews(Battle.IsOver()?1.0:Alpha);
     if (SmokeTest && Battle.IsOver())
     {
         if (SmokePhase == 0) { SmokePhase = 1; Restart(5); Speed = 10; }
         else { UE_LOG(LogTemp, Display, TEXT("QIANTONG_DEMO_SMOKE_PASS")); FPlatformMisc::RequestExit(false); }
     }
 }
-void ADemoDirector::SingleStep() { Paused = true; Traces.Reset(); Step(); RenderCameraY=Battle.CameraY; SyncViews(); }
+void ADemoDirector::SingleStep() { Paused = true; Traces.Reset(); Step(); Clock.Remainder=0; RenderSnapshot.Capture(Battle,true); SyncViews(1); }
 void ADemoDirector::CycleSpeed() { Speed = Speed == 1 ? 2 : Speed == 2 ? 5 : Speed == 5 ? 10 : 1; }
 bool ADemoDirector::ExportResult()
 {
@@ -225,7 +254,7 @@ bool ADemoDirector::ExportResult()
     Notice = Ok ? TEXT("Result saved to Saved / DemoResults") : TEXT("Could not save result. Check write permissions.");
     return Ok;
 }
-ADemoController::ADemoController() { bShowMouseCursor = true; bEnableClickEvents = true; bEnableMouseOverEvents = true; }
+ADemoController::ADemoController() { bShowMouseCursor = true; bEnableClickEvents = true; bEnableMouseOverEvents = false; }
 void ADemoController::BeginPlay()
 {
     Super::BeginPlay(); FInputModeGameAndUI Mode; Mode.SetHideCursorDuringCapture(false); Mode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock); SetInputMode(Mode);
@@ -269,7 +298,11 @@ void ADemoController::Three() { Action(TEXT("choice3")); }
 void ADemoController::Step() { Action(TEXT("step")); }
 void ADemoController::Quit() { UKismetSystemLibrary::QuitGame(this, this, EQuitPreference::Quit, false); }
 ADemoGameMode::ADemoGameMode() { DefaultPawnClass = nullptr; PlayerControllerClass = ADemoController::StaticClass(); HUDClass = ADemoHUD::StaticClass(); }
-ADemoDirector* ADemoHUD::Director() const { return FindDirector(GetWorld()); }
+ADemoDirector* ADemoHUD::Director() const
+{
+    if(!CachedDirector.IsValid()) CachedDirector=FindDirector(GetWorld());
+    return CachedDirector.Get();
+}
 void ADemoHUD::Rect(float X, float Y, float W, float H, FLinearColor Color) { DrawRect(Color, OffsetX + X * Scale, OffsetY + Y * Scale, W * Scale, H * Scale); }
 void ADemoHUD::Text(const FString& Value, float X, float Y, float Size, FLinearColor Color) { DrawText(Value, Color, OffsetX + X * Scale, OffsetY + Y * Scale, GEngine->GetMediumFont(), Size * Scale / 16.f, false); }
 void ADemoHUD::Line(FVector2D A, FVector2D B, FLinearColor Color, float Width) { DrawLine(OffsetX + A.X * Scale, OffsetY + A.Y * Scale, OffsetX + B.X * Scale, OffsetY + B.Y * Scale, Color, Width * Scale); }
@@ -282,6 +315,8 @@ void ADemoHUD::Button(FName Name, const FString& Label, float X, float Y, float 
 void ADemoHUD::NotifyHitBoxClick(FName Name) { if (ADemoController* PC = Cast<ADemoController>(GetOwningPlayerController())) PC->Action(Name); }
 void ADemoHUD::DrawHUD()
 {
+    TRACE_CPUPROFILER_EVENT_SCOPE(QT_DrawHUD);
+    CSV_SCOPED_TIMING_STAT(Qiantong, QT_DrawHUD);
     Super::DrawHUD(); if (!Canvas) return;
     Scale = FMath::Min(Canvas->SizeX / 720.f, Canvas->SizeY / 1280.f);
     OffsetX = (Canvas->SizeX - 720 * Scale) * .5f; OffsetY = (Canvas->SizeY - 1280 * Scale) * .5f;
@@ -319,8 +354,12 @@ void ADemoHUD::DrawHUD()
         const float Row=D->MapPosition(0,Y*1000).Y;
         if(Row>=235 && Row<=885) Line({205,Row},{655,Row},FLinearColor(.08f,.13f,.15f));
     }
-    for(int32 Cell:B.Obstacles)
+    const auto& Obstacles=B.GetObstacles();
+    const int32 Begin=Algo::LowerBound(Obstacles,FirstRow*QiantongDemo::GridWidth);
+    const int32 EndObstacle=Algo::LowerBound(Obstacles,(FirstRow+QiantongDemo::GridHeight+1)*QiantongDemo::GridWidth);
+    for(int32 Index=Begin;Index<EndObstacle;++Index)
     {
+        const int32 Cell=Obstacles[Index];
         const auto P=D->MapPosition(Cell%QiantongDemo::GridWidth*1000,Cell/QiantongDemo::GridWidth*1000);
         const float Top=FMath::Max(235.f,float(P.Y)+1),Bottom=FMath::Min(885.f,float(P.Y)+49);
         if(Top>=Bottom) continue;
@@ -330,15 +369,19 @@ void ADemoHUD::DrawHUD()
             Line(P+FVector2D(10,14),P+FVector2D(36,40),Muted*.55f,2);
         }
     }
+    static const TArray<FVector2D> Circle=[] {
+        TArray<FVector2D> Points;
+        for(int32 I=0;I<=32;++I) Points.Add(FVector2D(FMath::Cos(I*PI/16),FMath::Sin(I*PI/16)));
+        return Points;
+    }();
     for(const auto& H:B.Hazards)
     {
         const auto P=D->MapPosition(H.X,H.Y);
         const float Radius=60;
+        if(P.Y+Radius<235 || P.Y-Radius>885) continue;
         for(int32 I=0;I<32;++I)
         {
-            const double A=I*PI/16,A2=(I+1)*PI/16;
-            Line(P+FVector2D(FMath::Cos(A),FMath::Sin(A))*Radius,
-                 P+FVector2D(FMath::Cos(A2),FMath::Sin(A2))*Radius,Coral,3);
+            Line(P+Circle[I]*Radius,P+Circle[I+1]*Radius,Coral,3);
         }
         Line(P-FVector2D(15,15),P+FVector2D(15,15),Coral,2);
         Line(P+FVector2D(15,-15),P+FVector2D(-15,15),Coral,2);
@@ -348,7 +391,7 @@ void ADemoHUD::DrawHUD()
     {
         const auto P=D->ScreenPosition(U);
         if(P.Y<250 || P.Y>865) continue;
-        const double A=U.Aim*PI/180000.;
+        const double A=D->RenderPose(U).Z*PI/180000.;
         const FVector2D Direction(FMath::Cos(A),FMath::Sin(A));
         Line(P,P+Direction*30,U.Ally?Teal:Coral,3);
         Line(P+Direction*30,P+Direction*37,White,2);
@@ -401,7 +444,7 @@ void ADemoHUD::DrawHUD()
     Button(TEXT("squad"),FString::Printf(TEXT("%d UNITS"), B.AllyCount),347,1122,102);
     Button(TEXT("restart"),TEXT("RESTART"),459,1122,111);
     Button(TEXT("export"),TEXT("EXPORT"),580,1122,112);
-    Text(D->Notice,28,1187,12,Muted);
+    Text(D->GetSimBacklog()>.1?FString::Printf(TEXT("SIM BEHIND  %.2fs"),D->GetSimBacklog()):D->Notice,28,1187,12,D->GetSimBacklog()>.1?Coral:Muted);
     Button(TEXT("seed"),TEXT("NEW SEED [N]"),540,1180,152);
     Text(TEXT("SPACE pause   TAB speed   1/2/3 select   R restart   ESC exit"),28,1223,11,Muted);
     Text(TEXT("3 SECTORS / INSTANT LASER / 180 DEG PER SECOND"),28,1253,10,Teal);

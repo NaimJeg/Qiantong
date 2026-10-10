@@ -1,6 +1,10 @@
 #include "DemoBattle.h"
+#include "ProfilingDebugging/CpuProfilerTrace.h"
+#include "ProfilingDebugging/CsvProfiler.h"
 #include "Dom/JsonObject.h"
 #include "Serialization/JsonSerializer.h"
+
+CSV_DEFINE_CATEGORY(Qiantong, true);
 
 namespace QiantongDemo
 {
@@ -38,8 +42,16 @@ void FBattle::Reset(int32 Allies,uint32 InSeed)
     }
     Event(0,AllyCount,3,static_cast<int32>(Seed)); StartWave();
 }
+void FBattle::SetObstacles(const TArray<int32>& Cells)
+{
+    FMemory::Memzero(ObstacleMask);
+    Obstacles.Reset();
+    for(int32 Cell:Cells) if(Cell>=0 && Cell<GridWidth*MapRows && !OccupiedCell(Cell))
+    { ObstacleMask[Cell]=1; Obstacles.Add(Cell); }
+    Obstacles.Sort();
+}
 bool FBattle::Blocked(int32 Col,int32 Row) const
-{ return Col<0 || Col>=GridWidth || Row<0 || Row>=MapRows || Obstacles.Contains(Row*GridWidth+Col); }
+{ return Col<0 || Col>=GridWidth || Row<0 || Row>=MapRows || OccupiedCell(Row*GridWidth+Col); }
 bool FBattle::MapConnected() const
 {
     TArray<int32> Queue; TArray<uint8> Visited; Visited.Init(0,GridWidth*MapRows);
@@ -60,8 +72,9 @@ void FBattle::GenerateMap()
         for(int32 Try=0;Try<200 && Obstacles.Num()<Before+9+Segment%3;++Try)
         {
             const int32 X=Random()%GridWidth,Y=Segment*GridHeight+3+Random()%6,C=Y*GridWidth+X;
-            if(X==4 || Obstacles.Contains(C)) continue;
-            Obstacles.Add(C); if(!MapConnected()) Obstacles.Pop();
+            if(X==4 || OccupiedCell(C)) continue;
+            Obstacles.Add(C); ObstacleMask[C]=1;
+            if(!MapConnected()) { Obstacles.Pop(); ObstacleMask[C]=0; }
         }
     }
     Obstacles.Sort(); for(int32 C:Obstacles) Event(8,0,C,0);
@@ -91,6 +104,8 @@ void FBattle::Walk(FUnit& U)
 }
 void FBattle::AdvanceCover()
 {
+    TRACE_CPUPROFILER_EVENT_SCOPE(QT_AdvanceCover);
+    CSV_SCOPED_TIMING_STAT(Qiantong, QT_AdvanceCover);
     // Future enemies continue moving independently of camera position and wave transitions.
     TArray<FUnit> Next=Units;
     for(int32 I=0;I<Units.Num();++I)
@@ -99,7 +114,7 @@ void FBattle::AdvanceCover()
         if(U.Ally || U.Hp<=0 || (U.Generation==Wave && !Entering && DescentTicks==0)) continue;
         bool Covered=false;
         for(int32 N=0;N<4;++N)
-            if(Obstacles.Contains((U.Position/1000+DY[N])*GridWidth+U.X/1000+DX[N])) Covered=true;
+            if(OccupiedCell((U.Position/1000+DY[N])*GridWidth+U.X/1000+DX[N])) Covered=true;
         if(V.Waypoint<0 && !Covered) V.Waypoint=NextCell(U,nullptr,false);
         Walk(V); V.Action=EAction::Cover;
         Event(16,V.Id,V.X,V.Position);
@@ -116,24 +131,38 @@ void FBattle::Event(int32 Type,int32 A,int32 B,int32 Value)
 }
 bool FBattle::ClearRay(int32 X1,int32 Y1,int32 X2,int32 Y2) const
 {
-    // Closed slab intersection: grazing a wall edge/corner counts as blocked.
-    for(int32 C:Obstacles)
+    TRACE_CPUPROFILER_EVENT_SCOPE(QT_ClearRay);
+    CSV_SCOPED_TIMING_STAT(Qiantong, QT_ClearRay);
+    // Row supercover: clip the segment to each crossed row, then visit its X span.
+    // Include both neighbors at exact grid boundaries (closed edge/corner semantics).
+    const int32 First=FMath::Max(0,FMath::CeilToInt(double(FMath::Min(Y1,Y2))/CellSize)-1);
+    const int32 Last=FMath::Min(MapRows-1,FMath::FloorToInt(double(FMath::Max(Y1,Y2))/CellSize));
+    for(int32 Row=First;Row<=Last;++Row)
     {
         double Near=0,Far=1;
-        const int32 Origin[]={X1,Y1}, Delta[]={X2-X1,Y2-Y1};
-        const int32 Min[]={C%GridWidth*1000,C/GridWidth*1000};
-        bool Intersects=true;
-        for(int32 Axis=0;Axis<2;++Axis)
+        if(Y1!=Y2)
         {
-            if(!Delta[Axis]) { if(Origin[Axis]<Min[Axis] || Origin[Axis]>Min[Axis]+1000) Intersects=false; }
+            const double A=double(Row*CellSize-Y1)/double(Y2-Y1);
+            const double B=double((Row+1)*CellSize-Y1)/double(Y2-Y1);
+            Near=FMath::Max(0.0,FMath::Min(A,B)); Far=FMath::Min(1.0,FMath::Max(A,B));
+        }
+        const double A=X1+double(X2-X1)*Near,B=X1+double(X2-X1)*Far;
+        // Conservative epsilon only widens candidates; exact slab below decides hits.
+        const int32 Left=FMath::Max(0,FMath::CeilToInt((FMath::Min(A,B)-1.e-7)/CellSize)-1);
+        const int32 Right=FMath::Min(GridWidth-1,FMath::FloorToInt((FMath::Max(A,B)+1.e-7)/CellSize));
+        for(int32 Col=Left;Col<=Right;++Col) if(OccupiedCell(Row*GridWidth+Col))
+        {
+            double HitNear=Near,HitFar=Far;
+            if(X1==X2) { if(X1>=Col*CellSize && X1<=(Col+1)*CellSize) return false; }
             else
             {
-                const double A=double(Min[Axis]-Origin[Axis])/Delta[Axis],B=double(Min[Axis]+1000-Origin[Axis])/Delta[Axis];
-                Near=FMath::Max(Near,FMath::Min(A,B)); Far=FMath::Min(Far,FMath::Max(A,B));
-                if(Near>Far) Intersects=false;
+                const double C=double(Col*CellSize-X1)/double(X2-X1);
+                const double D=double((Col+1)*CellSize-X1)/double(X2-X1);
+                HitNear=FMath::Max(HitNear,FMath::Min(C,D));
+                HitFar=FMath::Min(HitFar,FMath::Max(C,D));
+                if(HitNear<=HitFar) return false;
             }
         }
-        if(Intersects) return false;
     }
     return true;
 }
@@ -144,6 +173,8 @@ bool FBattle::Dangerous(int32 X,int32 Y) const
 }
 int32 FBattle::NextCell(const FUnit& U,const FUnit* Target,bool Evading) const
 {
+    TRACE_CPUPROFILER_EVENT_SCOPE(QT_NextCell);
+    CSV_SCOPED_TIMING_STAT(Qiantong, QT_NextCell);
     const int32 BaseRow=U.Ally?CameraY/1000:(U.Generation-1)*WaveStride/1000;
     const int32 Offset=BaseRow*GridWidth,Start=U.Position/1000*GridWidth+U.X/1000;
     if(Start<Offset || Start>=Offset+GridWidth*GridHeight) return -1;
@@ -156,7 +187,7 @@ int32 FBattle::NextCell(const FUnit& U,const FUnit* Target,bool Evading) const
         for(const auto& Other:Units) if(Other.Hp>0 && Other.Ally==U.Ally && Other.Id!=U.Id &&
             (DistanceSq(X,Y,Other.X,Other.Position)<700LL*700 || Other.Waypoint==C)) Occupied=true;
         if(!Target) for(int32 N=0;N<4;++N)
-            if(Obstacles.Contains((C/GridWidth+DY[N])*GridWidth+C%GridWidth+DX[N])) Covered=true;
+            if(OccupiedCell((C/GridWidth+DY[N])*GridWidth+C%GridWidth+DX[N])) Covered=true;
         if(C!=Start && !Occupied && !Dangerous(X,Y) && (Evading || (!Target && Covered) || (Target &&
             DistanceSq(X,Y,Target->X,Target->Position)<=int64(AttackRange)*AttackRange && ClearRay(X,Y,Target->X,Target->Position))))
         {
@@ -176,6 +207,8 @@ int32 FBattle::NextCell(const FUnit& U,const FUnit* Target,bool Evading) const
 }
 void FBattle::Step(int32 Choose)
 {
+    TRACE_CPUPROFILER_EVENT_SCOPE(QT_BattleStep);
+    CSV_SCOPED_TIMING_STAT(Qiantong, QT_BattleStep);
     if(IsOver()) return;
     const bool AcceptChoice=CanChoose() && Choose>=1 && Choose<=3;
     ++Tick; LastShots.Reset();

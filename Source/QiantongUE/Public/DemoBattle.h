@@ -44,7 +44,8 @@ public:
     bool Dangerous(int32 X,int32 Y) const;
     TArray<FUnit> Units;
     TArray<FShot> LastShots;
-    TArray<int32> Obstacles;
+    const TArray<int32>& GetObstacles() const { return Obstacles; }
+    void SetObstacles(const TArray<int32>& Cells);
     TArray<FHazard> Hazards;
     int32 Tick=0, Choice=0, ChoiceTick=0, Winner=0;
     int32 Shots=0, TargetSwitches=0, AllyCount=2;
@@ -54,6 +55,9 @@ public:
     int32 EvasionSteps=0, HazardsCreated=0, HazardHits=0;
     uint32 Seed=1, Rng=1, EventHash=2166136261u;
 private:
+    TArray<int32> Obstacles;
+    uint8 ObstacleMask[GridWidth * MapRows] = {};
+    bool OccupiedCell(int32 Cell) const { return Cell >= 0 && Cell < GridWidth * MapRows && ObstacleMask[Cell] != 0; }
     void Event(int32 Type,int32 A,int32 B,int32 Value);
     uint32 Random();
     void StartWave();

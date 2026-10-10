@@ -1,5 +1,6 @@
 #include "Misc/AutomationTest.h"
 #include "DemoBattle.h"
+#include "DemoRender.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 #include "HAL/FileManager.h"
@@ -10,7 +11,7 @@ namespace
 {
 FBattle Duel()
 {
-    FBattle B; B.Reset(2); B.Obstacles.Reset(); B.Units.SetNum(2);
+    FBattle B; B.Reset(2); B.SetObstacles({}); B.Units.SetNum(2);
     B.Wave = 3; B.Entering=false;
     B.Units[0].X = 1500; B.Units[0].Position = 2500; B.Units[0].Aim = 180000;
     B.Units[1].Id = 101; B.Units[1].Ally = false; B.Units[1].Generation=3;
@@ -31,7 +32,7 @@ bool FDemoSpatialTest::RunTest(const FString& Parameters)
     const int32 Hp = B.Units[1].Hp;
     for (int32 I=0; I<19; ++I) B.Step();
     TestTrue(TEXT("Aligned laser damages immediately"), B.Units[1].Hp < Hp);
-    B = Duel(); B.Obstacles.Add(2 + 2 * GridWidth);
+    B = Duel(); B.SetObstacles({2 + 2 * GridWidth});
     TestFalse(TEXT("Wall occludes ray"), B.ClearRay(1500,2500,3500,2500));
     TestFalse(TEXT("Ray cannot graze wall corner"), B.ClearRay(1500,1500,3500,3500));
     TestTrue(TEXT("Parallel clear ray"), B.ClearRay(1500,1500,3500,1500));
@@ -93,13 +94,13 @@ bool FDemoExploreTest::RunTest(const FString& Parameters)
     TestEqual(TEXT("Dead allies not resurrected"), B.Units[1].Hp,0);
     TestEqual(TEXT("Choice persists"), B.Choice,1);
     FBattle SeedA,SeedB; SeedA.Reset(2,1); SeedB.Reset(2,2);
-    TestTrue(TEXT("Different seeds change layout"),SeedA.Obstacles!=SeedB.Obstacles);
+    TestTrue(TEXT("Different seeds change layout"),SeedA.GetObstacles()!=SeedB.GetObstacles());
     for (uint32 Seed=1; Seed<=24; ++Seed)
     {
         FBattle A, Copy; A.Reset(2,Seed); Copy.Reset(2,Seed);
         TestTrue(TEXT("Generated map is connected"), A.MapConnected());
-        TestTrue(TEXT("Seed replays exact obstacles"), A.Obstacles==Copy.Obstacles);
-        TestTrue(TEXT("Map has obstacles"), A.Obstacles.Num()>=6);
+        TestTrue(TEXT("Seed replays exact obstacles"), A.GetObstacles()==Copy.GetObstacles());
+        TestTrue(TEXT("Map has obstacles"), A.GetObstacles().Num()>=6);
         while(!A.IsOver())
         {
             const auto Before=A.Units; const int32 OldWave=A.Wave;
@@ -132,7 +133,7 @@ bool FDemoContinuityTest::RunTest(const FString& Parameters)
     B.Units[0].X=2700; // Preserve exact sub-cell X, not just lane.
     for(auto& U:B.Units) if(!U.Ally && U.Generation==1) U.Hp=0;
     B.Step();
-    const auto OldUnits=B.Units; const auto OldMap=B.Obstacles;
+    const auto OldUnits=B.Units; const auto OldMap=B.GetObstacles();
     const int32 Size=B.Units.Num();
     int32 LastCamera=B.CameraY;
     while(B.DescentTicks)
@@ -152,7 +153,7 @@ bool FDemoContinuityTest::RunTest(const FString& Parameters)
                 TestEqual(TEXT("Relocate only after camera stops"),B.DescentTicks,0);
             }
         }
-        for(int32 Cell:OldMap) TestTrue(TEXT("Existing obstacles persist"),B.Obstacles.Contains(Cell));
+        for(int32 Cell:OldMap) TestTrue(TEXT("Existing obstacles persist"),B.GetObstacles().Contains(Cell));
         LastCamera=B.CameraY;
     }
     TestEqual(TEXT("Camera never snaps back at wave boundary"),B.CameraY,26000);
@@ -222,6 +223,91 @@ bool FDemoGoldenTest::RunTest(const FString& Parameters)
             TestEqual(TEXT("Reviewed Golden exact JSON"),B.ResultJson(),Expected);
         else AddError(TEXT("Missing reviewed Golden: ")+Name);
     }
+    return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDemoRenderTest, "Qiantong.Demo.RenderInterpolation",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FDemoRenderTest::RunTest(const FString& Parameters)
+{
+    FUnit A; A.Id=7; A.Aim=359000;
+    FRenderUnit R; R.Push(A, true);
+    A.X+=200; A.Aim=1000; R.Push(A);
+    TestEqual(TEXT("Position halfway"),R.Sample(.5).X,double(A.X-100));
+    TestEqual(TEXT("Shortest wrap through zero"),R.Sample(.5).Z,360000.0);
+    TestEqual(TEXT("Backlog alpha clamped"),R.Sample(4).X,double(A.X));
+    A.Position+=26000; R.Push(A);
+    TestEqual(TEXT("Offscreen relocation snaps"),R.Sample(0).Y,double(A.Position));
+    A.Id=8; A.X=500; R.Push(A);
+    TestEqual(TEXT("New identity snaps"),R.Sample(0).X,500.0);
+    for(int32 Fps:{30,60,120,144}) for(bool Interpolate:{false,true})
+    {
+        FBattle B,Reference; B.Reset(5); Reference.Reset(5); FClock Clock;
+        FRenderSnapshot View; View.Capture(B,true);
+        for(int32 Frame=0; Frame<Fps*310 && !B.IsOver(); ++Frame)
+        {
+            for(int32 N=Clock.Advance(1.0/Fps,1,false);N>0;--N)
+            {
+                B.Step(B.CanChoose()?3:0); Reference.Step(Reference.CanChoose()?3:0);
+                View.Capture(B);
+            }
+            for(const auto& Unit:View.Units) Unit.Sample(Interpolate?Clock.Remainder/StepSeconds:1);
+        }
+        TestEqual(TEXT("Rendering cannot change simulation"),B.ResultJson(),Reference.ResultJson());
+        TestTrue(TEXT("Render scenario converges"),B.IsOver());
+    }
+    return true;
+}
+
+// Independent legacy slab oracle retained to verify closed-edge semantics.
+static bool LegacyClearRay(const FBattle& B,int32 X1,int32 Y1,int32 X2,int32 Y2)
+{
+    for(int32 C:B.GetObstacles())
+    {
+        double Near=0,Far=1;
+        const int32 Origin[]={X1,Y1},Delta[]={X2-X1,Y2-Y1};
+        const int32 Min[]={C%GridWidth*1000,C/GridWidth*1000};
+        bool Intersects=true;
+        for(int32 Axis=0;Axis<2;++Axis)
+        {
+            if(!Delta[Axis]) { if(Origin[Axis]<Min[Axis] || Origin[Axis]>Min[Axis]+1000) Intersects=false; }
+            else
+            {
+                const double A=double(Min[Axis]-Origin[Axis])/Delta[Axis],Z=double(Min[Axis]+1000-Origin[Axis])/Delta[Axis];
+                Near=FMath::Max(Near,FMath::Min(A,Z)); Far=FMath::Min(Far,FMath::Max(A,Z));
+                if(Near>Far) Intersects=false;
+            }
+        }
+        if(Intersects) return false;
+    }
+    return true;
+}
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FDemoRayTest, "Qiantong.Demo.ObstacleQueries",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FDemoRayTest::RunTest(const FString& Parameters)
+{
+    FBattle B; B.SetObstacles({20,20,-1,GridWidth*MapRows});
+    TestEqual(TEXT("Setter normalizes occupancy/list"),B.GetObstacles().Num(),1);
+    for(int32 X1=-1000;X1<=5000;X1+=500) for(int32 Y1=-1000;Y1<=5000;Y1+=500)
+        for(int32 X2=-1000;X2<=5000;X2+=500) for(int32 Y2=-1000;Y2<=5000;Y2+=500)
+            if(B.ClearRay(X1,Y1,X2,Y2)!=LegacyClearRay(B,X1,Y1,X2,Y2))
+            { AddError(TEXT("Closed edge/corner/point/reversed ray mismatch")); return false; }
+    uint32 Random=12345;
+    auto Next=[&Random]() { Random^=Random<<13; Random^=Random>>17; Random^=Random<<5; return Random; };
+    for(uint32 Seed=1;Seed<=24;++Seed)
+    {
+        B.Reset(5,Seed);
+        for(int32 C=0;C<GridWidth*MapRows;++C)
+            TestEqual(TEXT("Occupancy equals sorted list"),B.Blocked(C%GridWidth,C/GridWidth),B.GetObstacles().Contains(C));
+        for(int32 I=0;I<4000;++I)
+        {
+            const int32 X1=int32(Next()%13000)-2000,Y1=int32(Next()%71000)-3000;
+            const int32 X2=int32(Next()%13000)-2000,Y2=int32(Next()%71000)-3000;
+            if(B.ClearRay(X1,Y1,X2,Y2)!=LegacyClearRay(B,X1,Y1,X2,Y2))
+            { AddError(TEXT("Generated map ray mismatch")); return false; }
+        }
+    }
+    B.SetObstacles({}); TestTrue(TEXT("Clearing list clears mask"),B.ClearRay(0,0,9000,65000));
     return true;
 }
 #endif

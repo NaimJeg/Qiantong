@@ -5,6 +5,7 @@
 #include "GameFramework/HUD.h"
 #include "GameFramework/PlayerController.h"
 #include "DemoBattle.h"
+#include "DemoRender.h"
 #include "DemoRuntime.generated.h"
 
 class UStaticMeshComponent;
@@ -49,7 +50,10 @@ public:
     void Restart(int32 Allies = 0);
     void Choose(int32 Option);
     void NewSeed();
-    FVector2D MapPosition(int32 X, int32 Y) const;
+    FVector2D MapPosition(double X, double Y) const;
+    FVector RenderPose(const QiantongDemo::FUnit& Unit) const;
+    double GetSimBacklog() const { return FMath::Max(0.0, Clock.Remainder - QiantongDemo::StepSeconds); }
+    bool InterpolateViews = true;
     double GetCameraDepth() const { return RenderCameraY; }
     void SingleStep();
     void CycleSpeed();
@@ -63,7 +67,9 @@ public:
     FString Notice;
 private:
     void Step();
-    void SyncViews();
+    void SyncViews(double Alpha);
+    QiantongDemo::FRenderSnapshot RenderSnapshot;
+    double RenderAlpha = 1;
     QiantongDemo::FBattle Battle;
     QiantongDemo::FClock Clock;
     int32 PendingChoice = 0;
@@ -90,6 +96,7 @@ private:
     void Line(FVector2D A, FVector2D B, FLinearColor Color, float Width = 1);
     void Button(FName Name, const FString& Label, float X, float Y, float W, bool Active = false);
     ADemoDirector* Director() const;
+    mutable TWeakObjectPtr<ADemoDirector> CachedDirector;
 };
 
 UCLASS(Blueprintable)

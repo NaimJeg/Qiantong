@@ -1,4 +1,14 @@
-# 千瞳连续竖井演示 v3
+# 千瞳连续竖井演示 v3 / DEMO-04 表现修复
+
+2026-10-07：加入单位/瞄准/镜头帧级插值、单帧一次View提交、屏外Transform跳过、障碍mask与射线supercover、HUD可见行裁剪。规则版本仍为 `demo-3`；历史Windows包仍是v1。源码及Editor构建、7/7自动化、Core 2/2、五个纯数据蓝图编译均通过。
+
+720×1280、五友军+21预置敌人、seed1/协议3：60/120 FPS、10×与插值关闭共四场PIE，最新结果逐字段等于Golden，均tick277/hash `a664f106`，26个Actor跨波身份保持。60FPS插值打开时Frame/GameThread/GPU p95分别为16.6691/5.3495/2.4477ms；120FPS的Frame p95为8.3352ms。1×/10×均无backlog，每帧View同步最大1次。硬件、分位数及口径见 [性能证据](evidence/smooth-performance.json)；[Actor逐帧样本](evidence/smooth-view-samples.json)记录可见移动从10单位离散跳变变为60FPS约3.33、120FPS约1.67单位/帧。CSV scope是每帧累计耗时，不能当作单次调用耗时；完整Insights在 `Saved/Profiling/Smooth.utrace`。
+
+**整卡尚未标记DONE**：60/120FPS视频和视觉复核未完成。全编辑器截图被自动审批拒绝（可能包含额外编辑器内容），仅限PIE窗口的本地录制授权仍待答复；运行轨迹数据不能替代视频目视验收。
+
+复现：使用UE5.8.3启动工程，传 `-DemoOption=3 -csvGpuStats -ExecutePythonScript="<工程绝对路径>/Tools/VerifySmoothPIE.py"`；通过MCP StartPIE启动浮动窗口。脚本暂设720×1280及取消后台降频，预热8秒，自动跑四场并检查本次结果文件时间戳、Golden和Actor身份。`-DemoOption=3`仅用于验收，普通启动不自动选择。运行 `python Tools/SummarizeSmooth.py`汇总CSV。交互A/B可用 `qt.demo interpolation 0/1`、`qt.demo speed 1/2/5/10`；单步立即显示当前状态。录制脚本 `Tools/RecordSmoothPIE.ps1`仅匹配项目PIE窗口，获准后分别在60/120FPS运行阶段执行，不捕获整个桌面。
+
+## DEMO-03 基础行为
 
 DEMO-03 使用连续9×65地图，三波敌人开局提前布置并寻找掩体，由镜头带入。清场时镜头快于友军；友军完全画外后只调整纵向位置，X不变，镜头停稳后从上边缘走入。正常波次不创建、销毁或重置单位Actor。保留即时激光、限速瞄准、自动避险及三选一。
 

@@ -1,10 +1,22 @@
 # ARCHITECTURE — UE5 Prototype
 
 > 📌 状态：**必读 · 现行**
-> 版本：v0.7 — 连续地图 / 提前布敌 / 跨波次Actor生命周期。
+> 版本：v0.8 — 非权威双快照插值 / 等价空间查询 / 性能测量。
 > 本文件先记录当前代码事实；后续章节明确标为尚未落地的目标。结构/事件契约变更必须与代码同 commit 更新。
 
+抽象职责、状态归属与现存缺口见 [抽象边界](spec/ABSTRACTION_BOUNDARIES.md)；正式进入 Cocos 前的抽离与逐 tick 对照顺序见 [迁移计划](plan/UE_TO_COCOS_MIGRATION.md)。2026-10-10 补充说明未改变代码结构，也不表示 Portable/TS 迁移已实现。
+
 ## 0. 当前演示结构（2026-10-06，DEMO-03）
+
+### DEMO-04 修复（2026-10-07）
+
+- `DemoRender.h` 的值对象保留前后位置、Aim与CameraY；Director每次模拟步只更新快照和事件缓存，帧末按余量/50ms统一插值一次。Aim取最短角差；身份变化、重开、调试重建及画外重布重置样本。单步直接显示当前状态，暂停保持当前插值时刻。规则状态不持有表现数据。
+- Actor、头顶血条和瞄准线共用插值坐标；相机与单位使用同一alpha。可见单位仅在Transform变化时合并提交位置/旋转，隐藏状态仅变化时提交，屏外不更新Transform。相机/Deck固定局部位置在构造时设置。
+- `FBattle` 私有排序障碍列表为唯一输入，`SetObstacles`及地图生成同时维护固定585格mask；外部只读列表，避免缓存失效。移动/掩体O(1)查询保留原索引语义。射线按穿越行裁剪、遍历横向supercover格，并用原闭合slab区间判定擦边/碰角；不扫描全部累计障碍。
+- Canvas HUD按排序列表二分定位可见行，危险圈单位向量缓存，Director使用弱引用缓存；无Hover需求，关闭鼠标Hover事件。保留Canvas及Actor结构。
+- 六个 `QT_*` Insights/CSV scope测量BattleStep、AdvanceCover、NextCell、ClearRay、SyncViews、DrawHUD；CSV另含每帧步数、同步次数、tick、倍速与backlog。`qt.demo interpolation 0/1`供A/B验收，`qt.demo speed 1..10`设置倍速；积压超过0.1秒显示SIM BEHIND。工具脚本不参与正式运行。
+
+### DEMO-03 基础结构（继续有效）
 
 - `DemoBattle` v3 开局生成9×65连续逻辑网格，视口覆盖13行；三波之间含连接区域，障碍生成后跨波保留。X、累计纵向Position、CameraY、XorShift32状态、危险、波次均属FBattle值状态。BFS固定邻接顺序找安全射击格/掩体，整格墙体阻挡移动及射线；单位没有物理碰撞，射击站位主动分散。
 - 毫度 Aim 每50ms最多转9000（180°/秒），≤3000误差且射程/遮挡通过才能生成即时 FShot。射线使用逻辑坐标线段与闭合障碍格相交检测，擦边算阻挡；角度由 atan2 转整毫度。此数值实现已测 Win64，不宣称跨 TS 对齐。
